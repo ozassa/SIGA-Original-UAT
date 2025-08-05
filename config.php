@@ -1,36 +1,20 @@
 <?php
   if(session_id() == '') {
+   // Detectar se está em HTTPS para configurar cookies seguros
+   $is_https = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+   
    session_set_cookie_params([
-    'secure' => true,
-    'httponly' => true
-]);
-session_set_cookie_params([
-    'secure' => true,
+    'secure' => $is_https,
     'httponly' => true
 ]);
 session_start();
   }
    
-  // Configurações de erro seguras
-  $is_production = !defined('ENV') || ENV !== 'development';
-  
-  if ($is_production) {
-    // Produção: Desabilitar exibição de erros e habilitar logging
-    error_reporting(E_ALL);
-    ini_set('display_errors', 0);
-    ini_set('display_startup_errors', 0);
-    ini_set('log_errors', 1);
-    ini_set('error_log', dirname(__FILE__) . '/src/logs/error.log');
-    
-    // Configurar handler customizado para erros não capturados
-    set_error_handler('secure_error_handler');
-    set_exception_handler('secure_exception_handler');
-  } else {
-    // Desenvolvimento: Mostrar erros para debug
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-  }
+  // TEMPORÁRIO: Mostrar erros para debug até resolver problemas
+  error_reporting(E_ALL);
+  ini_set('display_errors', 1);
+  ini_set('display_startup_errors', 1);
+  ini_set('log_errors', 1);
   
   // Função de tratamento seguro de erros
   function secure_error_handler($errno, $errstr, $errfile, $errline) {

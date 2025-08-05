@@ -1,8 +1,13 @@
 ﻿<?php
 require_once __DIR__ . "/session_config.php";
 
-// Incluir funções de segurança
-require_once(__DIR__ . "/security_functions.php");
+// Incluir funções de segurança (com verificação)
+if (file_exists(__DIR__ . "/security_functions.php")) {
+    require_once(__DIR__ . "/security_functions.php");
+} else {
+    // Fallback sem segurança avançada por enquanto
+    error_log("AVISO: security_functions.php não encontrado");
+}
 
 // Interaktiv - Pagina de atualização
 // require_once ("versao_sistema.php");

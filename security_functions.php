@@ -7,8 +7,8 @@
  * compatibilidade com o frontend existente.
  */
 
-// Inicializar sessão se não existir
-if (!isset($_SESSION)) {
+// Inicializar sessão se não existir (verificação mais robusta)
+if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
