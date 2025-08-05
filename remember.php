@@ -5,8 +5,10 @@
   require_once(__DIR__ . "/session_config.php");
   require_once(__DIR__ . "/security_functions.php");
   require_once(__DIR__ . "/secure_password_recovery.php");
+  require_once(__DIR__ . "/hybrid_auth.php");
  
-  require_once("src/role/consultaCoface.php"); 
+  require_once("src/role/consultaCoface.php");
+  require_once("src/role/rolePrefix.php"); 
  
   $op_num = isset($_POST['operacao']) ? (preg_match("/^[0-9]+$/", $_POST['operacao']) ? $_POST['operacao'] : 0) : 0;
 
@@ -91,6 +93,8 @@
 				  odbc_autocommit ($db, FALSE);
 				  // Usar novo sistema de hash seguro
 				  $pwd = hybrid_password_hash($_POST['senha']);
+				  // Gerar cookie único
+				  $key = uniqid('user_', true);
 				  
 				  //odbc_exec($db,"INSERT INTO Users (cookie, name, login, email, password, state, perfil) VALUES ('".$key."','". utf8_decode($_POST["nome"]) ."','".$userREmail."','".$userREmail."','".$pwd."','0', 'C')");
 
@@ -158,6 +162,7 @@
 					*/
 				}
 			}
+		  }
 
 			$sql = "SELECT id, login, name, password, email
 							FROM Users 
@@ -229,7 +234,8 @@
 
 				header("location: index.php?msg=". $msg); 
 		  }
-	  } else { ?>
+	  }
+	} else { ?>
 		  <script> window.location = 'index.php?msg=Informe os dados corretamente!';</script>
 		  <?php 
 	  }

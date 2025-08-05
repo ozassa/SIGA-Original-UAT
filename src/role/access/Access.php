@@ -19,9 +19,22 @@ require_once("../../../security_functions.php");
 // Incluir sistema híbrido de autenticação
 require_once("../../../hybrid_auth.php");
 
+// Verificar se a conexão com o banco está disponível
+if (!isset($db) || !$db) {
+    error_log("CRITICAL: Database connection not available in Access.php");
+    header("Location: ../../../emergency_index_db.php?erro=db");
+    exit();
+}
+
 // Verificar CSRF para requisições POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !in_array($comm, ['exit'])) {
-    csrf_middleware();
+    try {
+        csrf_middleware();
+    } catch (Exception $e) {
+        error_log("CSRF middleware error: " . $e->getMessage());
+        header("Location: ../../../index.php?erro=csrf");
+        exit();
+    }
 }
 
 $validar = isset($_REQUEST['validar']) ? $_REQUEST['validar'] : false;
@@ -32,12 +45,17 @@ if (isset($_SESSION['validar'])) {
 }
 
 if ($comm == 'exit') {
+    // Secure session cleanup
     $_SESSION['userID'] = '';
     $_SESSION['nameUser'] = '';
     $_SESSION['login'] = '';
     $_SESSION['pefil'] = '';
+    
+    // Destroy session completely for security
+    session_destroy();
+    
     $content = "../../../index.php";
-    ?> <script> window.location = '<?php echo $content ?>'; </script> <?php
+    header("Location: $content");
     exit();
 }
 
@@ -95,12 +113,19 @@ $op_opt     = isset($_REQUEST['operacao']) ? $_REQUEST['operacao'] : 0;
 
 if ($op_opt == 3) {
     // Autenticar usuário antes de alterar senha
-    $auth_result = hybrid_authenticate($userLogin, $_REQUEST['senhaAtual'], $db);
-    
-    if (!$auth_result['success']) {
-        $content = "../../../index.php?erro=1";
-        header("Location:$content");
-        die();
+    try {
+        $auth_result = hybrid_authenticate($userLogin, $_REQUEST['senhaAtual'], $db);
+        
+        if (!$auth_result['success']) {
+            error_log("Authentication failed during password change: " . $auth_result['message']);
+            $content = "../../../index.php?erro=1";
+            header("Location:$content");
+            die();
+        }
+    } catch (Exception $e) {
+        error_log("CRITICAL: Authentication error during password change: " . $e->getMessage());
+        header("Location: ../../../emergency_index_db.php?erro=auth");
+        exit();
     }
     
     $user = $auth_result['user'];
@@ -131,22 +156,29 @@ if ($op_opt == 3) {
 
 if (($validar == 'login' || $op_opt == 3) && $userLogin != '' && $senhaAtual != '') {
     // Usar sistema híbrido de autenticação com proteção brute force
-    $auth_result = hybrid_authenticate($userLogin, ($op_opt == 3) ? $_REQUEST['senhaAtual'] : $_REQUEST['password'], $db);
-    
-    if (!$auth_result['success']) {
-        // Log da tentativa de login falhada
-        error_log("Login failed for user: $userLogin - " . $auth_result['message']);
+    try {
+        $password_to_check = ($op_opt == 3) ? $_REQUEST['senhaAtual'] : $_REQUEST['password'];
+        $auth_result = hybrid_authenticate($userLogin, $password_to_check, $db);
         
-        // Atualizar contador de tentativas na sessão (compatibilidade)
-        if (!isset($_SESSION['tentativaSenha_' . $userLogin])) {
-            $_SESSION['tentativaSenha_' . $userLogin] = 0;
+        if (!$auth_result['success']) {
+            // Log da tentativa de login falhada
+            error_log("Login failed for user: $userLogin - " . $auth_result['message']);
+            
+            // Atualizar contador de tentativas na sessão (compatibilidade)
+            if (!isset($_SESSION['tentativaSenha_' . $userLogin])) {
+                $_SESSION['tentativaSenha_' . $userLogin] = 0;
+            }
+            $_SESSION['tentativaSenha_' . $userLogin]++;
+            $_SESSION['tentativaLoginUsuario'] = $userLogin;
+            
+            $content = "../../../index.php?erro=1";
+            header("Location:$content");
+            die();
         }
-        $_SESSION['tentativaSenha_' . $userLogin]++;
-        $_SESSION['tentativaLoginUsuario'] = $userLogin;
-        
-        $content = "../../../index.php?erro=1";
-        header("Location:$content");
-        die();
+    } catch (Exception $e) {
+        error_log("CRITICAL: Authentication system error: " . $e->getMessage());
+        header("Location: ../../../emergency_index_db.php?erro=auth_system");
+        exit();
     }
     
     // Login bem-sucedido - obter dados do usuário
@@ -209,11 +241,25 @@ if (($validar == 'login' || $op_opt == 3) && $userLogin != '' && $senhaAtual != 
     } else {
         // Interaktiv 06/05/2015
         // Nova fun��o de Bloquear o acesso do usu�rio
-        $stmt    = odbc_prepare($db, "SELECT id, perfil, name, login, password, email, tentativaSenha
-                                FROM Users 
-                                WHERE login = ? AND state = '0'");
-        $resulx = odbc_execute($stmt, array($userLogin));
-        $curUsr = odbc_fetch_array($stmt);
+        try {
+            $stmt = odbc_prepare($db, "SELECT id, perfil, name, login, password, email, tentativaSenha
+                                      FROM Users 
+                                      WHERE login = ? AND state = '0'");
+            if (!$stmt) {
+                throw new Exception("Failed to prepare user query: " . odbc_errormsg($db));
+            }
+            
+            $resulx = odbc_execute($stmt, array($userLogin));
+            if (!$resulx) {
+                throw new Exception("Failed to execute user query: " . odbc_errormsg($db));
+            }
+            
+            $curUsr = odbc_fetch_array($stmt);
+        } catch (Exception $e) {
+            error_log("Database error in Access.php: " . $e->getMessage());
+            header("Location: ../../../emergency_index_db.php?erro=db_query");
+            exit();
+        }
 
         $usuarioID = $curUsr ? $curUsr['id'] : '';
         $perfil = $curUsr ? $curUsr["perfil"] : '';
@@ -223,9 +269,20 @@ if (($validar == 'login' || $op_opt == 3) && $userLogin != '' && $senhaAtual != 
         $tentativaSenha = $curUsr ? $curUsr['tentativaSenha'] : '';
 
         if ($usuarioID != "") {
-            $sqlUpUser = "UPDATE Users SET tentativaSenha = ? WHERE id = ?";
-            $curUpUser = odbc_prepare($db, $sqlUpUser);
-            odbc_execute($curUpUser, array($tentativaSenha, $usuarioID));
+            try {
+                $sqlUpUser = "UPDATE Users SET tentativaSenha = ? WHERE id = ?";
+                $curUpUser = odbc_prepare($db, $sqlUpUser);
+                if (!$curUpUser) {
+                    throw new Exception("Failed to prepare update query: " . odbc_errormsg($db));
+                }
+                
+                $updateResult = odbc_execute($curUpUser, array($tentativaSenha, $usuarioID));
+                if (!$updateResult) {
+                    error_log("Failed to update tentativaSenha for user ID: $usuarioID");
+                }
+            } catch (Exception $e) {
+                error_log("Database update error in Access.php: " . $e->getMessage());
+            }
         }
 
         $_SESSION['tentativaSenha_' . $userLogin . ''] = $tentativaSenha;
@@ -260,20 +317,44 @@ if (($validar == 'login' || $op_opt == 3) && $userLogin != '' && $senhaAtual != 
 
         $q = "SELECT alterSenha FROM Users WHERE id = ?";
 
-        $cur = odbc_prepare($db, $q);
+        try {
+            $cur = odbc_prepare($db, $q);
+            if (!$cur) {
+                throw new Exception("Failed to prepare alterSenha query: " . odbc_errormsg($db));
+            }
+            
+            $executeResult = odbc_execute($cur, [$id]);
+            if (!$executeResult) {
+                throw new Exception("Failed to execute alterSenha query: " . odbc_errormsg($db));
+            }
 
-        odbc_execute($cur, [$id]);
-
-        while (odbc_fetch_row($cur)) {
-            $alterSenha = odbc_result($cur, 'alterSenha');
+            while (odbc_fetch_row($cur)) {
+                $alterSenha = odbc_result($cur, 'alterSenha');
+            }
+        } catch (Exception $e) {
+            error_log("Database error checking alterSenha: " . $e->getMessage());
+            $content = "../../../emergency_index_db.php?erro=db_altersenha";
+            header("Location:$content");
+            exit();
         }
 
         if (($alterSenha) == "") //Caso o campo alterSenha seja NULL - primeiro acesso apos criacao
         {
             $dataAcrescimo = somadata(date('d-m-Y'), 6); //prazo de 7 dias para trocar senha
-            $q2 = "UPDATE Users SET alterSenha = ? WHERE id = ?";
-            $cur2 = odbc_prepare($db, $q2);
-            odbc_execute($cur2, [$dataAcrescimo, $id]);
+            try {
+                $q2 = "UPDATE Users SET alterSenha = ? WHERE id = ?";
+                $cur2 = odbc_prepare($db, $q2);
+                if (!$cur2) {
+                    throw new Exception("Failed to prepare alterSenha update: " . odbc_errormsg($db));
+                }
+                
+                $updateResult = odbc_execute($cur2, [$dataAcrescimo, $id]);
+                if (!$updateResult) {
+                    throw new Exception("Failed to execute alterSenha update: " . odbc_errormsg($db));
+                }
+            } catch (Exception $e) {
+                error_log("Database error updating alterSenha: " . $e->getMessage());
+            }
 
             $indicador = "dentroPrazo";
             $comm = "open";
@@ -357,21 +438,34 @@ if ($_SESSION['pefil'] != '' && $_SESSION['userID'] != "") {
         WHERE c.id = ? AND c.perfil = ?
         ORDER BY UPPER(a.name), c.login";
 
-    $cur = odbc_prepare($db, $qry);
-    odbc_execute($cur, array($_SESSION['userID'], $_SESSION['pefil']));
+    try {
+        $cur = odbc_prepare($db, $qry);
+        if (!$cur) {
+            throw new Exception("Failed to prepare role query: " . odbc_errormsg($db));
+        }
+        
+        $executeResult = odbc_execute($cur, array($_SESSION['userID'], $_SESSION['pefil']));
+        if (!$executeResult) {
+            throw new Exception("Failed to execute role query: " . odbc_errormsg($db));
+        }
 
-    //print $qry;
-    $x = 0;
+        //print $qry;
+        $x = 0;
+        $role = array(); // Initialize role array to prevent undefined variable errors
 
-    //$cur = odbc_exec($db, $qry);
-    while (odbc_fetch_row($cur)) {
-        $x = $x + 1;
-        $name = odbc_result($cur, 'name');
-        $id = odbc_result($cur, 'id');
-        $role[$name] = $id . '<br>';
+        //$cur = odbc_exec($db, $qry);
+        while (odbc_fetch_row($cur)) {
+            $x = $x + 1;
+            $name = odbc_result($cur, 'name');
+            $id = odbc_result($cur, 'id');
+            $role[$name] = $id . '<br>';
+        }
+
+        odbc_free_result($cur);
+    } catch (Exception $e) {
+        error_log("Database error loading user roles: " . $e->getMessage());
+        $role = array(); // Initialize empty role array as fallback
     }
-
-    odbc_free_result($cur);
 
     //*************************************************************
     if ($comm == "func") {
@@ -380,7 +474,7 @@ if ($_SESSION['pefil'] != '' && $_SESSION['userID'] != "") {
         //require_once("../../../../site/func/Login.php");
         $tipoCli = 'funcionario';
 
-        $comm == "functionaryLogin";
+        $comm = "functionaryLogin";
 
         //Script para verificar a troca de senha de 6 em 6 meses
         //require_once("alterSenha.php");
@@ -437,26 +531,45 @@ if ($_SESSION['pefil'] != '' && $_SESSION['userID'] != "") {
         }
 
     } else if ($comm == "client") {
-        $sql = "SELECT COUNT(id) AS id FROM Insured WHERE idResp = ?";
-        $cur1 = odbc_prepare($db, $sql);
-        odbc_execute($cur1, array($_SESSION['userID']));
+        try {
+            $sql = "SELECT COUNT(id) AS id FROM Insured WHERE idResp = ?";
+            $cur1 = odbc_prepare($db, $sql);
+            if (!$cur1) {
+                throw new Exception("Failed to prepare Insured query: " . odbc_errormsg($db));
+            }
+            
+            $executeResult = odbc_execute($cur1, array($_SESSION['userID']));
+            if (!$executeResult) {
+                throw new Exception("Failed to execute Insured query: " . odbc_errormsg($db));
+            }
 
-        $id_user = odbc_result($cur1, 'id');
+            $id_user = odbc_result($cur1, 'id');
+            $_SESSION['id_user'] = $id_user;
+            odbc_free_result($cur1);
 
-        $_SESSION['id_user'] = $id_user;
-
-        odbc_free_result($cur1);
-
-        if (!$_SESSION['id_user']) {
-            $sql = "SELECT COUNT(b.idInform) AS idx FROM Inform a
-                    INNER JOIN Inform_Usuarios b ON b.idInform = a.id
-                    WHERE b.idUser = ?";
-            $cur2 = odbc_prepare($db, $sql);
-            odbc_execute($cur2, array($_SESSION['userID']));
-            $idx = odbc_result($cur2, 'idx');
-
-            $_SESSION['idx'] = $idx;
-            odbc_free_result($cur2);
+            if (!$_SESSION['id_user']) {
+                $sql = "SELECT COUNT(b.idInform) AS idx FROM Inform a
+                        INNER JOIN Inform_Usuarios b ON b.idInform = a.id
+                        WHERE b.idUser = ?";
+                $cur2 = odbc_prepare($db, $sql);
+                if (!$cur2) {
+                    throw new Exception("Failed to prepare Inform query: " . odbc_errormsg($db));
+                }
+                
+                $executeResult2 = odbc_execute($cur2, array($_SESSION['userID']));
+                if (!$executeResult2) {
+                    throw new Exception("Failed to execute Inform query: " . odbc_errormsg($db));
+                }
+                
+                $idx = odbc_result($cur2, 'idx');
+                $_SESSION['idx'] = $idx;
+                odbc_free_result($cur2);
+            }
+        } catch (Exception $e) {
+            error_log("Database error in client section: " . $e->getMessage());
+            // Set default values to prevent errors
+            $_SESSION['id_user'] = 0;
+            $_SESSION['idx'] = 0;
         }
 
         $bancoOB = isset($role["bancoOB"]) ? $role["bancoOB"] : false;
