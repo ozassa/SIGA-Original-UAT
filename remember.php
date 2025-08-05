@@ -226,22 +226,22 @@
 				
 				//die($_SESSION['mensagemSucess']);
 				
-				header("location: index.php?msg=". $msg); ?>
-		    <script> //window.location = 'index.php?msg=<?php echo $msg;?>';</script>
-		    <?php 
+				header("location: index.php?msg=". urlencode($msg)); 
+				exit();
 		  } else { 
 				//$_SESSION['mensagemSucess'] =  $msg;
-
-				header("location: index.php?msg=". $msg); 
+				header("location: index.php?msg=". urlencode($msg)); 
+				exit();
 		  }
 	  }
-	} else { ?>
-		  <script> window.location = 'index.php?msg=Informe os dados corretamente!';</script>
-		  <?php 
-	  }
-	}  
-?>
+	} else { 
+		header("location: index.php?msg=" . urlencode("Informe os dados corretamente!"));
+		exit();
+	}
+} // Fechamento do if($op_num == 2)
 
+// Only show HTML content if no redirect occurred
+?>
 <p align="right"><a href="javascript:TINY.box.hide()" class="linktexto">Fechar</a></p>
 <?php 
 	$rem = isset($_REQUEST['rem']) ? (preg_match("/^[0-9]+$/", $_REQUEST['rem']) ? $_REQUEST['rem'] : '') : '';
