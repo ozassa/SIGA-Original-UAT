@@ -1,0 +1,103 @@
+
+
+<?
+/**
+currency
+*/
+
+
+$numParc = $field->getNumField("numParc");
+$valPar = sprintf("%.2f", $pr / $numParc);
+$diferenca = $pr - ($valPar * $numParc);
+$primeira = $valPar + $diferenca;
+
+$prExt = number_format($pr, 2, '.', '');
+$tx = number_format($tx, 2, ",", ".");
+$pr = number_format($pr, 2, ",", ".");
+
+$txMonFull = ($field->getNumField("currencyMonitor") == 1 ? "R$ " : "US$ ").
+             number_format($field->getNumField("txAnalize"),2,",",".");
+$txMonExt = number_format($field->getNumField("txAnalize"), 2, '.', '');
+$txMonQ = $field->getNumField("txAnalize") / 4;
+$txQExt = strval(number_format($txMonQ, 2, '.', ''));
+$txMonQ = "R$ ".number_format($txMonQ ,2,",",".");
+
+$cA = strval($field->getNumField("currency"));
+$txA = $field->getNumField("txAnalize");
+$txAnal = ($field->getNumField("currencyAnalize") == 1 ? "R$ " : "US$").
+number_format($field->getNumField("txAnalize"), 2, ",", ".");
+$txAnalExt = strval(number_format($txA, 2, '.', ''));
+
+$msg =
+"
+Oferta SBCE - $name
+
+Prezad(o/a) $respName,
+
+Apresentamos,a seguir, nossa oferta firme para a contratação de sua
+apólice de seguro de crédito à exportação:
+
+Taxa de prêmio: ".$tx."%
+Prêmio mínimo: US$ ".$pr." (".$numberExtensive->extensive($prExt, 2).").
+Vigência da apólice: 1 ano a partir da aceitação da proposta de seguro.
+Validade desta cotação: presente mês.
+
+Uma vez assinado o contrato entre a SBCE e essa empresa, o pagamento do prêmio mínimo deverá ser efetuado à vista";
+
+if ($numParc != 1) {
+  $msg .= " ou em $numParc parcela(s), da seguinte forma: parcela à vista, na contratação da apólice, no valor de US$ ". number_format($primeira, 2, ',', '.'). " e as demais, conforme a seguir, em  US$:
+
+Parcela            Valor\n";
+               
+  for($j = 2; $j <= $numParc; $j++){
+    $msg_aux = "$j". "ª               ".
+      number_format($valPar, 2, ',', '.'). "\n";
+    $msg .= $msg_aux;
+  }
+}else{
+  $msg .= '.';
+}
+// 1ª parcela: na assinatura do contrato (à vista);
+// 2ª parcela: 90 dias a partir do início da vigência da apólice;
+// 3ª parcela: 180 dias a partir do início da vigência da apólice;
+// 4ª parcela: 270 dias a partir do início da vigência da apólice;
+
+$msg .= "
+Após o final da vigência de sua apólice, com base nas Declarações de Volume de Exportação (DVE) enviadas 
+por essa empresa, verificaremos se existe alguma parcela de ajuste ao prêmio mínimo, multiplicando-se o 
+volume de exportações realizadas passíveis de seguro pela taxa de prêmio proposta para a sua apólice, no
+caso ". $tx. "%.
+
+Serão cobradas as seguintes taxas:
+
+- Taxa de análise cadastral: paga, anualmente, por importador analisado, no final do primeiro trimestre de
+vigência da apólice ou quando houver inclusão de novo importador.  O valor atual da taxa de análise é 
+de ".$txAnal."(".$numberExtensive->extensive($txAnalExt, 1).") por importador analisado.
+
+- Taxa de monitoramento: devida ao final de cada trimestre e cobrada enquanto o importador permanecer segurado.
+O valor atual da taxa de monitoramento é de ".$txMonFull."( ".$numberExtensive->extensive($txMonExt, 1).")
+por importador monitorado, cobrado em 4 parcelas trimestrais.
+
+Uma vez acordadas todas as condições pertinentes à contratação de sua apólice, enviaremos a documentação para
+sua assinatura e a fatura para o pagamento da parcela devida de prêmio mínimo.
+
+Permanecemos à disposição no que for preciso e aguardamos seu retorno.
+
+Atenciosamente,
+
+".$user->name."
+Divisão Comercial
+Seguradora Brasileira de Crédito à Exportação S.A.
+http://www.sbce.com.br
+
+Rio de Janeiro
+Rua Senador Dantas, 74 - 16º andar
+Centro - Rio de Janeiro - RJ - 20031-201
+Tel.: (21) 2510.5000
+
+São Paulo
+Alameda Santos, 234 1º andar
+Cerqueira César - SP - 01418-000
+Tel.: (11) 3284.3132\n\n";
+
+?>

@@ -1,0 +1,59 @@
+<?
+
+if (!is_numeric($field->getNumField("prevExp12")) ||
+    !is_numeric($field->getNumField("numShip12"))) {
+  $msg = "Campo não numérico";
+}  else if ($field->getField("name") == "" ||
+	  //$field->getField("address") == "" || 
+          $field->getNumField("country") == "") {
+  $msg = "Todos os campos são obrigatórios";
+  echo "<pre>Nome:$name</pre>";
+  echo "<pre>end:$address</pre>";
+  echo "<pre>País:$country</pre>";
+  echo "<pre>cep:$cep</pre>";
+  echo "alo1!";
+} else{
+  echo "alo!";
+  echo "<pre>end:$address</pre>";
+  $cur = odbc_exec($db,
+		   "UPDATE Importer
+                    SET
+	              name = '$name',
+	              address = '$address',
+	              idCountry = $idCountry,
+	              tel = '$tel',
+	              cep = '$cep',
+	              contact = '$contact',
+	              fax = '$fax',
+	              relation = '$relation',
+	              seasonal = '$seasonal',
+	              prevExp12 = ".($field->getNumField("prevExp12")*1000).",
+	              numShip12 = ".$field->getNumField("numShip12").",
+	              periodicity = ".$field->getNumField("periodicity").",
+	              city = '$city',
+	              przPag = $przPag
+                    WHERE id = $idBuy");
+  if (!$cur){
+    $msg = "Problemas na atualização da base<br>";
+    echo odbc_errormsg();
+  }else{
+    $msg = '';
+    $name = '';
+    $address = '';
+    $idCountry = 0;
+    $tel = '';
+    $prevExp12 = 0;
+    $numShip12 = 0;
+    $periodicity = 0;
+    $city = '';
+    $przPag = 0;
+    $cep = '';
+    $fax = '';
+    $contact = '';
+    $relation = '';
+    $seasonal = 0;
+    $idBuy = 0;
+  }
+}
+
+?>

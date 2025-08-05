@@ -1,0 +1,211 @@
+
+//###############################################################################
+//COMENTARIO SOBRE O ARQUIVO TREE_MENU.JS
+//inicio
+
+// +-----------------------------------------------------------------------+
+// | Copyright (c) 2002, Richard Heyes, Harald Radi                        |
+// | All rights reserved.                                                  |
+// |                                                                       |
+// | Redistribution and use in source and binary forms, with or without    |
+// | modification, are permitted provided that the following conditions    |
+// | are met:                                                              |
+// |                                                                       |
+// | o Redistributions of source code must retain the above copyright      |
+// |   notice, this list of conditions and the following disclaimer.       |
+// | o Redistributions in binary form must reproduce the above copyright   |
+// |   notice, this list of conditions and the following disclaimer in the |
+// |   documentation and/or other materials provided with the distribution.| 
+// | o The names of the authors may not be used to endorse or promote      |
+// |   products derived from this software without specific prior written  |
+// |   permission.                                                         |
+// |                                                                       |
+// | THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS   |
+// | "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT     |
+// | LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR |
+// | A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  |
+// | OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, |
+// | SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT      |
+// | LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, |
+// | DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY |
+// | THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT   |
+// | (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE |
+// | OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  |
+// |                                                                       |
+// +-----------------------------------------------------------------------+
+// | Author: Richard Heyes <richard@phpguru.org>                           |
+// |         Harald Radi <harald.radi@nme.at>                              |
+// +-----------------------------------------------------------------------+
+//
+// $Id: TreeMenu.js,v 1.6 2002/07/27 12:43:15 richard Exp $
+
+// cc 2002-10-29, default style classes for use in tree text.
+
+//PODE SER USADO NA LINHA 303
+/*
+  if (this.childParents[layerID] == null) {
+    return this.branchStatus[layerID];
+  } else {
+    return this.branchStatus && this.checkVisibility(this.childParents[layerID]);
+  }
+*/
+
+//fim
+//COMENTARIO SOBRE O ARQUIVO TREE_MENU.JS
+//###############################################################################
+
+
+
+
+//###############################################################################
+//COMENTARIO SOBRE O ARQUIVO TREE_SNIFFER.JS
+//inicio
+
+//<!--
+// Ultimate client-side JavaScript client sniff. Version 3.03
+// (C) Netscape Communications 1999-2001.  Permission granted to reuse and distribute.
+// Revised 17 May 99 to add is_nav5up and is_ie5up (see below).
+// Revised 20 Dec 00 to add is_gecko and change is_nav5up to is_nav6up
+//                      also added support for IE5.5 Opera4&5 HotJava3 AOLTV
+// Revised 22 Feb 01 to correct Javascript Detection for IE 5.x, Opera 4, 
+//                      correct Opera 5 detection
+//                      add support for winME and win2k
+//                      synch with browser-type-oo.js
+// Revised 26 Mar 01 to correct Opera detection
+// Revised 02 Oct 01 to add IE6 detection
+
+// Everything you always wanted to know about your JavaScript client
+// but were afraid to ask. Creates "is_" variables indicating:
+// (1) browser vendor:
+//     is_nav, is_ie, is_opera, is_hotjava, is_webtv, is_TVNavigator, is_AOLTV
+// (2) browser version number:
+//     is_major (integer indicating major version number: 2, 3, 4 ...)
+//     is_minor (float   indicating full  version number: 2.02, 3.01, 4.04 ...)
+// (3) browser vendor AND major version number
+//     is_nav2, is_nav3, is_nav4, is_nav4up, is_nav6, is_nav6up, is_gecko, is_ie3,
+//     is_ie4, is_ie4up, is_ie5, is_ie5up, is_ie5_5, is_ie5_5up, is_ie6, is_ie6up, is_hotjava3, is_hotjava3up,
+//     is_opera2, is_opera3, is_opera4, is_opera5, is_opera5up
+// (4) JavaScript version number:
+//     is_js (float indicating full JavaScript version number: 1, 1.1, 1.2 ...)
+// (5) OS platform and version:
+//     is_win, is_win16, is_win32, is_win31, is_win95, is_winnt, is_win98, is_winme, is_win2k
+//     is_os2
+//     is_mac, is_mac68k, is_macppc
+//     is_unix
+//     is_sun, is_sun4, is_sun5, is_suni86
+//     is_irix, is_irix5, is_irix6
+//     is_hpux, is_hpux9, is_hpux10
+//     is_aix, is_aix1, is_aix2, is_aix3, is_aix4
+//     is_linux, is_sco, is_unixware, is_mpras, is_reliant
+//     is_dec, is_sinix, is_freebsd, is_bsd
+//     is_vms
+//
+// See http://www.it97.de/JavaScript/JS_tutorial/bstat/navobj.html and
+// http://www.it97.de/JavaScript/JS_tutorial/bstat/Browseraol.html
+// for detailed lists of userAgent strings.
+//
+// Note: you don't want your Nav4 or IE4 code to "turn off" or
+// stop working when new versions of browsers are released, so
+// in conditional code forks, use is_ie5up ("IE 5.0 or greater") 
+// is_opera5up ("Opera 5.0 or greater") instead of is_ie5 or is_opera5
+// to check version in code which you want to work on future
+// versions.
+
+//fim
+//COMENTARIO SOBRE O ARQUIVO TREE_SNIFFER.JS
+//###############################################################################
+
+
+
+
+//###############################################################################
+//COMENTARIO SOBRE O ARQUIVO TREE_MENU.CSS
+//inicio
+
+/* TreeMenu.css
+  A component of HTML_TreeMenu as extended by Chip Chapin
+  2002-10-31 Chip Chapin
+*/
+
+/* Since all menu items are links, the following is equally important 
+ * to your menu appearance.  
+ * The main thing you may want to change are the A:link and A:visited colors.
+ */
+
+//fim
+//COMENTARIO SOBRE O ARQUIVO TREE_MENU.CSS
+//###############################################################################
+
+
+
+
+//###############################################################################
+//COMENTARIO SOBRE O ARQUIVO TREE_MENU.PHP
+//inicio
+
+// 2002-11-02 cchapin:
+//   This version of the TreeMenu includes my HTML_TreeNodeStyle subclass extension,
+//   as well as a few other changes.  It is based on release version v1.0.4.
+
+// +-----------------------------------------------------------------------+
+// | Copyright (c) 2002, Richard Heyes, Harald Radi                        |
+// | All rights reserved.                                                  |
+// |                                                                       |
+// | Redistribution and use in source and binary forms, with or without    |
+// | modification, are permitted provided that the following conditions    |
+// | are met:                                                              |
+// |                                                                       |
+// | o Redistributions of source code must retain the above copyright      |
+// |   notice, this list of conditions and the following disclaimer.       |
+// | o Redistributions in binary form must reproduce the above copyright   |
+// |   notice, this list of conditions and the following disclaimer in the |
+// |   documentation and/or other materials provided with the distribution.|
+// | o The names of the authors may not be used to endorse or promote      |
+// |   products derived from this software without specific prior written  |
+// |   permission.                                                         |
+// |                                                                       |
+// | THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS   |
+// | "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT     |
+// | LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR |
+// | A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  |
+// | OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, |
+// | SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT      |
+// | LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, |
+// | DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY |
+// | THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT   |
+// | (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE |
+// | OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  |
+// |                                                                       |
+// +-----------------------------------------------------------------------+
+// | Author: Richard Heyes <richard@phpguru.org>                           |
+// |         Harald Radi <harald.radi@nme.at>                              |
+// +-----------------------------------------------------------------------+
+//
+// $Id: TreeMenu.php,v 1.7 2002/07/27 12:43:15 richard Exp $
+
+/**
+* HTML_TreeMenu Class
+*
+* A simple couple of PHP classes and some not so simple
+* Jabbascript which produces a tree menu. In IE this menu
+* is dynamic, with branches being collapsable. In IE5+ the
+* status of the collapsed/open branches persists across page
+* refreshes.In any other browser the tree is static. Code is
+* based on work of Harald Radi.
+*
+* Usage.
+*
+* After installing the package, copy the example php script to
+* your servers document root. Also place the TreeMenu.js and the
+* images folder in the same place. Running the script should
+* then produce the tree.
+*
+* @author  Richard Heyes <richard@php.net>
+* @author  Harald Radi <harald.radi@nme.at>
+* @access  public
+* @package HTML_TreeMenu
+*/
+
+//fim
+//COMENTARIO SOBRE O ARQUIVO TREE_MENU.PHP
+//###############################################################################

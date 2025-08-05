@@ -1,0 +1,225 @@
+<?
+
+require ("../rolePrefix.php");
+
+// se não recebemos o id do inform da página localizamos um inform disponível ou criamos outro
+if ($idInform == NULL) {
+  require ("addInf.php");
+}
+if ($idInform == NULL) {
+  if ($user->hasRole("client")) {
+    require ("../client/interf/Login.php");
+  } else {
+    require ("../functionary/interf/Login.php");
+  }
+
+  // Monta o resumo do informe
+} else if ($comm == "open") {
+  if ($canc && $state != 11 && $state != 9) {
+    $content = "../client/interf/Login.php";
+  } else {
+    require ("verifyAnt.php");
+    if ($state >= 3)
+      $content = "../client/interf/ViewClient.php";
+    else 
+      $content = "../inform/interf/InformRes.php";
+
+  }
+  require ("../../../../site/informe/index.php");
+
+} else if ($comm == "changeImporter") {
+  $content = "../client/interf/ViewClient.php";
+  require ("../../../../site/informe/index.php");
+
+  // Monta a tela de entrada das informações gerais
+} else if ($comm == "generalInformation") {
+  $content = "../inform/interf/GeneralInf.php";
+  require ("../../../../site/informe/index.php");
+
+  // Guarda no banco as informações gerais do segurado
+} else if ($comm == "generalSubmit") {
+  require ("generalSubmit.php");
+  if ($forward == "success")
+    $content = "../inform/interf/VolVendExt.php";
+  else
+    $content = "../inform/interf/GeneralInf.php";
+  require ("../../../../site/informe/index.php");
+
+  // Monta a tela de entrada de volume de exportação
+} else if ($comm == "volVendExt") {
+  $content = "../inform/interf/VolVendExt.php";
+  require ("../../../../site/informe/index.php");
+
+  // tela anterior
+} else if ($comm == "volvend") {
+  $content = "../inform/interf/VolVendExt.php";
+  require ("../../../../site/informe/index.php");
+
+  // Guarda no banco as informações de volume de exportação
+} else if ($comm == "volSubmit") {
+  require ("volSubmit.php");
+  if ($forward == "success")
+    $content = "../inform/interf/SegVendExt.php";
+  else
+    $content = "../inform/interf/VolVendExt.php";
+  require ("../../../../site/informe/index.php");
+
+  // Monta a tela de segmentação de vendas
+} else if ($comm == "segVendExt") {
+  $content = "../inform/interf/SegVendExt.php";
+  require ("../../../../site/informe/index.php");
+
+  // Insere um elemento da segmentação de exportações
+} else if ($comm == "insSeg") {
+  $incont = $total + $field->getNumField('valExp');
+  if ($incont > $prev){
+    $msgInc = " O volume segmentado ultrapassou o valor declarado no Quadro I.  ";
+    $comm = "segVendExt";
+  }else{
+    require ("insSeg.php");
+  }
+  $content = "../inform/interf/SegVendExt.php";
+  require ("../../../../site/informe/index.php");
+
+  // Remove um elemento da segmentação de vendas
+} else if ($comm == "remSeg") {
+  require ("remSeg.php");
+  $content = "../inform/interf/SegVendExt.php";
+  require ("../../../../site/informe/index.php");
+
+  // Guarda no banco as informações de segmentação de exportações
+} else if ($comm == "segSubmit") {
+  require ("segSubmit.php");
+  if ($forward == "success")
+    $content = "../inform/interf/Buyers.php";
+  else
+    $content = "../inform/interf/SegVendExt.php";
+  require ("../../../../site/informe/index.php");
+
+  // Monta a tela de previsão de financiamento
+} else if ($comm == "prevFinanc") {
+  $content = "../inform/interf/PrevFinanc.php";
+  require ("../../../../site/informe/index.php");
+
+  // Guarda no banco as informações da previsão de financiamento
+} else if ($comm == "prevSubmit") {
+  require ("prevSubmit.php");
+  if ($forward == "success")
+    $content = "../inform/interf/Buyers.php";
+  else
+    $content = "../inform/interf/PrevFinanc.php";
+  require ("../../../../site/informe/index.php");
+
+  // Monta a tela de relação de compradores
+} else if ($comm == "buyers") {
+  $content = "../inform/interf/Buyers.php";
+  require ("../../../../site/informe/index.php");
+
+  // Insere na base um comprador
+} else if ($comm == "insBuy") {
+  //$incont = $soma + ($field->getNumField('prevExp12')*1000);
+  //if ($incont > $prev){
+  //  $msgInc = "A Soma da Previsão de Exportação para todos os Importadores deve ser Menor ou Igual ao valor informado em 'Exportação Sujeita à Seguro' na linha 'Previsão para os próximos 12 meses' do Quadro I. Por favor, Corrija o Valor do Campo 'Previsão Vol. Export (US$ Mil)' ";
+  //}else{
+    require ("insBuy.php");
+  //}
+  $content = "../inform/interf/Buyers.php";
+  require ("../../../../site/informe/index.php");
+
+  // Remove um comprador
+} else if ($comm == "remBuy") {
+  require ("remBuy.php");
+  $content = "../inform/interf/Buyers.php";
+  require ("../../../../site/informe/index.php");
+
+  // ALTERA um comprador
+} else if ($comm == "altBuy") {
+  //require ("altBuy.php");
+  $content = "../inform/interf/Buyers.php";
+  require ("../../../../site/informe/index.php");
+
+} else if ($comm == "setAltBuy") {
+  require("soma.php");
+  $incont = $soma + ($field->getNumField('valExp'));
+  //echo "incont=$incont, prev=$prev<br>";
+  //if ($incont > $prev){
+  //  $msgInc = "A Soma da Previsão de Exportação para todos os Importadores deve ser Menor ou Igual ao Volume Passível de Cobertura pelo Seguro (Quadro I). Por favor, Corrija o Valor do Campo 'Previsão Vol. Export (US$ Mil)' ";
+  //  $comm = "segVendExp";
+  //}else{
+    require ("setAltBuy.php");
+  //}
+  $content = "../inform/interf/Buyers.php";
+  require ("../../../../site/informe/index.php");
+
+  // Guarda no banco as informações dos compradores
+} else if ($comm == "buySubmit") {
+  require ("buySubmit.php");
+  if ($forward == "success")
+    $content = "../inform/interf/Lost.php";
+  else $content = "../inform/interf/Buyers.php";
+  require ("../../../../site/informe/index.php");
+
+  // Guarda no banco as informações dos compradores
+} else if ($comm == "lost") {
+  $content = "../inform/interf/Lost.php";
+  require ("../../../../site/informe/index.php");
+
+} else if ($comm == "lostSubmit") {
+  require ("lostSubmit.php");
+  if ($forward == "success")
+    $content = "../inform/interf/InformRes.php";
+  else $content = "../inform/interf/Lost.php";
+  require ("../../../../site/informe/index.php");
+
+  // Apresentação da simulação de prêmio
+} else if ($comm == "simul") {
+  $content = "../inform/interf/Simulation.php";
+  require ("../../../../site/informe/index.php");
+
+  // tela anterior
+} else if ($comm == "back") {
+  $content = "../inform/interf/GeneralInf.php";
+  require ("../../../../site/informe/index.php");
+
+  // Conclusão do informe
+} else if ($comm == "done") {
+  require ("confComp.php");
+  if ($soma > $prev){
+    $msgInc = "A Soma da Previsão de Exportação para todos os Importadores deve ser Menor ou Igual ao Volume Passível de Cobertura pelo Seguro (Quadro I). Por favor, Corrija o Valor do Campo 'Previsão Vol. Export (US$ Mil)' ";
+    $content = "../inform/interf/Buyers.php";
+  }else if($prev != $quadro2){
+    $msgInc = "A soma dos valores do Quadro II deve ser igual ao Volume Passível de Cobertura pelo Seguro (Quadro I). Por favor, corrija um dos quadros";
+    $content = "../inform/interf/VolVendExt.php";
+  }else {
+    require ("done.php");
+    if ($forward == "success") {
+      if ($user->hasRole("client")) {
+        $content = "../inform/interf/Retorno.php";
+        require ("../../../../site/informe/index.php");
+        session_destroy();
+      }else{
+        $content = "../notification/BoxInput.php";
+      }
+    }else{
+      $content = "../inform/interf/InformRes.php";
+    }
+  }
+  require ("../../../../site/informe/index.php");
+} else if ($comm == "changeImporter") {
+  $comm = "open";
+  $content = "../client/interf/ViewClient.php";
+  require ("../../../../site/informe/index.php");
+} else if($comm == "client"){
+  $comm = "open";
+  require("../client/Client.php");
+} else if($comm == 'volta'){
+  $comm = 'renovacao';
+  require("../executive/Executive.php");
+} else if($comm == 'address'){
+  $comm = 'addAddress';
+  $idBuyer = $idBuy;
+  $back = 1;
+  require("../client/Client.php");
+}
+
+?>

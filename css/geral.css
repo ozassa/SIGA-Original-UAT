@@ -1,0 +1,426 @@
+@charset "utf-8"; 
+/* CSS Document */
+
+/* GERAIS - INÍCIO */
+html, body			{width:100%; height:100%;}
+.fundoimagem		{background:url(../images/fundo_01.jpg) repeat;}
+.fundocor			{/*background-color:#f1f1f1;*/ background:#f1f1f1;}
+h1					{font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; font-size:30px; color:#777777; line-height:100%; font-weight:normal; margin-bottom:10px;}
+h2					{font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; font-size:18px; color:#777777; line-height:21px; font-weight:bold; margin-bottom:10px;}
+h3					{font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; font-size:16px; color:#777777; line-height:21px; font-weight:bold; margin-bottom:10px;}
+h4					{font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; font-size:14px; color:#f1f1f1; line-height:21px; font-weight:bold;}
+h5					{font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; font-size:16px; color:#777777; line-height:21px; font-weight:normal; margin-bottom:10px;}
+span				{font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; font-size:11px; color:#777777; line-height:15px;}
+p					{font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; font-size:12px; color:#777777; line-height:18px; margin-bottom:15px;}
+li					{font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; font-size:13px; color:#777777; line-height:22px;}
+ul					{font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; font-size:13px; color:#777777; line-height:22px;}
+li a				{color:#777777; text-decoration:underline; padding: 0px 2px; font-weight:bold;}
+li a:hover			{color:#777777; text-decoration:none; background-color:#FFFFFF; padding: 0px 2px; font-weight:bold;}
+/* GERAIS - FIM */
+
+
+
+/* CLASSES GERAIS - INÍCIO */
+.clear 				{clear:both;}
+#clear 				{clear:both;}
+.texto10			{font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; font-size:10px; color:#777777; line-height:14px;}
+.texto11			{font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; font-size:11px; color:#777777; line-height:16px;}
+.texto12			{font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; font-size:12px; color:#777777; line-height:18px;}
+.texto14			{font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; font-size:14px; color:#777777; line-height:18px;}
+.textobranco10		{font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; font-size:10px; color:#ffffff; line-height:14px;}
+.textobranco11		{font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; font-size:11px; color:#ffffff; line-height:16px;}
+.textobranco14		{font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; font-size:14px; color:#ffffff; line-height:18px;}
+.linktexto			{font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; font-size:12px; color:#777777; line-height:18px; padding:0px 2px; background-color:#f1f1f1; text-decoration:none;}
+.linktexto:hover	{background-color:#777777; color:#ffffff;}
+.efeitobotao:hover	{opacity:0.80; -moz-opacity: 0.80; filter: alpha(opacity=80)}
+/* CLASSES GERAIS - FIM */
+
+
+
+/* FORMULÁRIO - INÍCIO */
+label 					{display: block; margin:5px 0px 5px 0px; font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; font-size:12px; color:#777777; line-height:16px; font-weight:bold;}
+label span 				{display: block; width:100%; margin-top:2px; float:left;}
+input, textarea			{color:#777777; background-color:#f0f0f0; width:95%; padding:4px 4px; margin-bottom:10px; font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; font-size:12px;}
+select 					{color:#777777; background:#f0f0f0; width:95%; padding:4px 4px; margin-bottom:8px; font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; font-size:12px;}
+input:focus				{background:#ffffff;}
+select:focus			{background:#ffffff;}
+textarea:focus			{background:#ffffff;}
+input, textarea, select {border-top:solid 1px #bbbbbb; border-right:solid 1px #eeeeee; border-bottom:solid 1px #eeeeee; border-left:solid 1px #bbbbbb;} /* colocando as bordas */
+textarea 				{height:100px; overflow:auto;} /* barra de rolagem automática */
+.checkbox				{float:left; text-align:left; background-color:#00FF00; margin:10px;}
+.checkboxtabela			{float:left; text-align:center; margin:1px; padding:0; border:0; background:transparent;}
+.campo3colunas			{width:300px; margin-right:16px; float:left; list-style:none; text-align:left;}
+.campo2colunas			{width:465px; margin-right:10px; float:left; list-style:none; text-align:left;height:60px}
+.campo3colunastable		{width:280px; margin-right:10px; float:left; list-style:none; text-align:left;}
+.formopcao				{width:13px; height:auto; float:left; text-align:left; margin:0; padding:0; margin-right:10px;}
+.formopcaonew			{width:13px; height:auto; float:left; text-align:left; margin:0; padding:0; margin-right:16px; clear:both;}
+
+.formselect				{width:120px; height:auto; float:left; text-align:left; margin:0; padding:0; margin-right:10px;}
+.formdescricao			{width:auto; height:auto; float:left; text-align:left; margin-right:15px;}
+.formdescricao span		{font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; font-size:12px; color:#777777; line-height:18px;}
+.imagemcampo			{margin:0px 0px 0px 10px; position:absolute;z-index:0;cursor:pointer;}
+.barrabotoes			{width:950px; /*height:30px; *//*display:table;*/ border-top:dotted 1px #bbbbbb; margin:30px 0px 30px 0px; padding-top:10px; clear:both;}
+.barrabotoes img		{margin-right:20px;}
+.barrabotoes img:hover	{opacity:0.80; -moz-opacity: 0.80; filter: alpha(opacity=80);}
+.semformatacao			{color:#777777; background-color:#fff; width:auto; padding:0; margin:0 0 0 0; height:20px;}
+/* FORMULÁRIO - FIM */
+
+
+/* TELA ENTRADA - INÍCIO */
+#entradageral		{width:600px; height:404px; top:50%; left:50%; margin-top:-202px; margin-left:-300px; position:absolute; background-image:url(../images/fundo_tela_entrada_saida.png); background-repeat:no-repeat;}
+#entrada			{width:200px; height:334px; float:right; padding:35px 25px 35px 25px;}
+/* TELA ENTRADA - FIM */
+
+
+
+/* GERAL - INÍCIO */
+#tudogeral			{position:relative; min-height:100%;}
+/* GERAL - FIM */
+
+
+
+/* CABECALHO - INÍCIO */
+#cabecalho			{width:100%; height:80px; background-image:url(../images/fundo_cabecalho.png); background-position:center;}
+#cabecalhomenu		{width:100%; height:35px; background-image:url(../images/fundo_menu.png); background-position:center;}
+#cabecalhoconteudo	{width:990px; display:block; margin:auto;}
+#cabecalhomarca		{width:230px; margin-top:14px;float:left; margin-right:20px;}
+#cabecalhonome		{width:70px; height:80px; float:left; margin-right:132px;}
+#cabecalhodados		{width:530px; height:80px; float:left;}
+#cabecalhodadoslinha1		{width:100%; height:45px;}
+#cabecalhodadoslinha1texto	{width:auto; margin:10px 20px 0px 0px; float:left;}
+#cabecalhodadoslinha1botao	{width:auto; height:21px; float:left; margin-top:24px;}
+#cabecalhodadoslinha2		{width:100%; height:35px;}
+/* CABECALHO - FIM */
+
+
+
+/* MENU EM CASCATA - INÍCIO */
+/*#nav					{z-index:1000;}*/
+#painel					{width:990px; height:26px; padding-top:9px; margin-left:20px; _overflow:hidden; display:block;}
+#nav, #nav ul			{list-style-type:none; list-style-position:outside; position:relative; line-height:30px; text-align:center;}
+#nav a					{display:block; padding: 0; color:#ffffff; text-decoration:none;}
+#nav li					{/*z-index:1010;*/ float:left; position:relative; margin-right:8px;}
+#nav ul 				{position:absolute; display:none; width:200px; top:26px; margin:0px; opacity:0.90; -moz-opacity:0.90; filter:alpha(opacity=90);left:0;z-index:9999;}
+#nav li ul a			{width:180px; float:left; background-color:#f2f2f2; color:#d0d8de; border-bottom:solid 1px #d9d9d9; text-align:left; padding: 6px 0px 6px 11px;
+						font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; font-size:11px; color:#777777; line-height:16px; font-weight:bold;}
+#nav ul ul				{top:auto; background-color:#f1f1f1;}
+#nav ul li a label		{background-color:#f1f1f1;}
+#nav li ul ul 			{left:190px; margin:0px;}
+#nav li:hover ul ul, #nav li:hover ul ul ul, #nav li:hover ul ul ul ul						{display:none;}
+#nav li:hover ul, #nav li li:hover ul, #nav li li li:hover ul, #nav li li li li:hover ul	{display:block;}
+#menu li.menu 			{position:relative;}
+#menu li:hover ul.biMenu, #menu li.hover ul.biMenu 											{display:block;}
+#menu ul.biMenu 		{display:none; position:absolute; top:100%;	left:0%; background:#f2f2f2; width:164px; /* for IE */	filter:alpha(opacity=95); /* CSS3 standard  */ opacity:0.95;}
+#menu li.biMenu 		{background: url(../Imagens/NovoLayout/divisoria.gif) no-repeat center bottom; width:100%;}
+#menu li.last 			{background:none; margin-bottom:5px;}
+#menu li.biMenu a 		{cursor:pointer; color:#FFF; text-decoration:none; background: url(../Imagens/NovoLayout/bullet_menu.gif) no-repeat 26px center; padding:8px 0px; display:block;}
+#menu li.biMenu a:hover {color:#6AB5EB;}
+.lblTopMenu				{display:inline-block; padding-left: 10px; margin-top:0px; padding-bottom:5px; border-bottom:1px; padding-top:7px; background: #f1f1f1 url(../images/SetaBaixo.png) no-repeat scroll top right; padding-right:26px  }
+.menuFilho				{background: #f1f1f1 url(../images/SetaDireita.png) no-repeat scroll top right;}
+/*
+
+
+/* CORPO SISTEMA - INÍCIO */
+#corpo					{width:990px; display:block; max-height:100%; background-color:#FFFFFF; margin:auto; margin-top:20px; margin-bottom:40px; border-bottom:solid #bbbbbb 2px;}
+	#titulo					{width:950px; height:36px;*height:46px; padding:20px 20px 0px 20px;display:table;}
+.divisoriaamarelo		{width:100%; height:3px; background-image:url(../images/divisoria_amarelo.png); background-repeat:no-repeat;}
+#navegacao				{width:950px; padding:5px 20px 0px 20px;}
+#navegacao span			{font-family:Verdana, Tahoma, Arial, "Trebuchet MS", Helvetica; font-size:9px; color:#777777; line-height:15px; font-weight:normal;}
+#navegacao a			{color:#777777; text-decoration:none; padding: 1px 2px; background-color:#f1f1f1;}
+#navegacao a:hover		{color:#ffffff; text-decoration:none; background-color:#777777; padding: 0px 2px;}
+.conteudopagina			{width:950px; display:table; padding:20px 20px 35px 20px;}
+.conteudopagina form {display:table;min-height:20px}
+
+.divisoria01			{width:100%; height:10px; clear:both; display:block; border-bottom:#CCC dotted 1px; margin:0 0 10px 0;display:none;}
+
+/* CORPO SISTEMA - FIM */
+
+
+
+/* RODAPÉ - INÍCIO */
+#rodapegeral			{width:100%; height:80px; display:block;}
+#rodape					{width:990px; height:50px; border-bottom:solid #c41d25 2px; margin:auto; margin-bottom:20px;}
+#rodapecoluna1			{width:98px; height:50px; float:left; text-align:left;}
+#rodapecoluna2			{width:142px; height:42px; float:left; text-align:right;}
+#rodapecoluna3			{float:right;}
+
+/* RODAPÉ - FIM */
+
+
+
+/* CONSUMÍVEIS - INÍCIO */
+#options 				{width:950px; margin-bottom:25px; text-align:left; color:#777777;}
+#acc 					{width:950px; list-style:none; color:#cccccc;clear:both;display:table;}
+#acc h3 				{width:940px; /*border:1px solid #cccccc;*/ height:20px; padding:5px; font-weight:bold; cursor:pointer; background:url(../images/fundo_consumiveis.png); margin:5px 0px 0px 0px;}
+#acc h3:hover 			{background:url(../images/fundo_consumiveis_ativo.png);}
+#acc .acc-section 		{overflow:hidden; background-color:#ffffff;}
+#acc .acc-content 		{width:918px; padding:15px; border:1px solid #eeeeee; border-top:none; background-color:#ffffff;/* display:table;*/}
+#nested 				{width:920px; list-style:none; color:#cccccc; margin-bottom:15px;}
+#nested h3 				{width:910px; height:20px; /*border:1px solid #cccccc;*/ padding:5px; font-weight:bold; cursor:pointer; background:url(../images/fundo_consumiveis.png);}
+#nested h3:hover 		{background:url(../images/fundo_consumiveis_ativo.png);}
+#nested .acc-section 	{overflow:hidden; background:#fff;}
+#nested .acc-content 	{width:908px; padding:5px; border:1px solid #f1f1f1; background:#f9f9f9;}
+#nested .acc-selected 	{background:url(../images/fundo_consumiveis_ativo.png);}
+
+/* CONSUMÍVEIS - FIM */
+
+
+
+/* MODAL - INÍCIO */
+#tinybox 				{position:absolute; display:none; padding:10px; background:#fff url(images/preload.gif) no-repeat 50% 50%; border:10px solid #e3e3e3; z-index:2000}
+#tinymask 				{position:absolute; display:none; top:0; left:0; height:100%; width:100%; background:#000; z-index:1500}
+#tinycontent 			{background-color:#FFFFFF;}
+.button 				{font:14px Georgia,Verdana; margin-bottom:10px; padding:8px 10px 9px; border:1px solid #ccc; background:#eee; cursor:pointer}
+.button:hover 			{border:1px solid #bbb; background:#e3e3e3}
+
+/* MODAL - FIM */
+
+
+/* BOTÕES - INÍCIO */
+.botaoapp				{width:44px; height:21px; background:url(../images/botao_a_pp.png);}
+.botaoapm				{width:90px; height:21px; background:url(../images/botao_a_pm.png);}
+.botaoapg				{width:180px; height:21px; background:url(../images/botao_a_pg.png);}
+.botaovpp				{width:44px; height:21px; background:url(../images/botao_v_pp.png);}
+.botaovpm				{width:90px; height:21px; background:url(../images/botao_v_pm.png);}
+.botaovpg				{width:180px; height:21px; background:url(../images/botao_v_pg.png);}
+
+.botaoapp, .botaoapm, .botaoapg, .botaovpp, .botaovpm, .botaovpg {border:0; padding:0 0 6px 0; *padding:0 0 2px 0; font:bold 10px Arial,"Trebuchet MS",Verdana,Tahoma,Helvetica; color:#ffffff; text-transform:uppercase; cursor:pointer;}
+@media screen and (-webkit-min-device-pixel-ratio:0){.botaoapp, .botaoapm, .botaoapg, .botaovpp, .botaovpm, .botaovpg {padding:0 0 2px 0;}}
+
+.botaoagp				{width:44px; height:31px; background:url(../images/botao_a_gp.png);}
+.botaoagm				{width:90px; height:31px; background:url(../images/botao_a_gm.png);}
+.botaoagm2				{width:auto; height:31px; background:url(../images/bg_cofa_azul.png);border-radius:3px;}
+.botaoagg				{width:180px; height:31px; background:url(../images/botao_a_gg.png);}
+.botaovgp				{width:44px; height:31px; background:url(../images/botao_v_gp.png);}
+.botaovgm				{width:90px; height:31px; background:url(../images/botao_v_gm.png);}
+.botaovgg				{width:180px; height:31px; background:url(../images/botao_v_gg.png);}
+
+.botaoagp, .botaoagm, .botaoagg, .botaovgp, .botaovgm, .botaovgg, .botaoagm2 {border:0; padding:3px 5px 3px 5px; font:bold 12px Arial,"Trebuchet MS",Verdana,Tahoma,Helvetica; color:#ffffff; text-transform:uppercase; cursor:pointer;}
+
+
+/* BOTÕES - FIM */
+
+
+/* XXX - INÍCIO */
+/* XXX - FIM */
+
+
+
+/* MENSAGENS DE ALTERTAS E ERROS*/
+
+ .info, .success, .warning, .error, .validation {
+	border: 1px solid;
+	margin: 10px 0px;
+	padding:15px 10px 15px 50px;
+	background-repeat: no-repeat;
+	background-position: 10px center;
+	position:absolute;
+	display:none;
+	font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; 
+	font-size:12px;
+	left:440px;
+	width:350px;
+	height:auto;
+	
+}
+.info {
+	color: #00529B;
+	background-color: #BDE5F8;
+	background-image: url('../images/info.png');
+}
+.success {
+	color: #4F8A10;
+	background-color: #DFF2BF;
+	background-image:url('../images/success.png');
+}
+.warning {
+	color: #9F6000;
+	position:absolute;
+	background-color: #FEEFB3;
+	background-image: url('../images/warning.png');
+}
+.error {
+	color: #D8000C;
+	background-color: #F1F8A5;
+	background-image: url('../images/error.png');
+}
+.close{
+	 left:365px;
+	 color:#666;
+	 position:absolute;
+	 top:-1px;
+	 cursor:pointer;
+	 font-family:Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; 
+	 font-size:12px;
+}
+.popup-alter			{background:#f9f9f9; position:absolute; margin:0 0 0 100px; padding:20px; width:700px; height:auto; border:solid 5px #dddddd;}
+
+/* XXX - INÍCIO */
+/* XXX - FIM */
+
+.btn {
+	height: 20px;
+	border: 1px solid #ddd;
+	padding: 5px;
+	text-decoration: none;
+	margin-right: 10px;
+	border-radius: 3px;
+	background: #ffffff; /* Old browsers */
+	background: -moz-linear-gradient(top,  #ffffff 0%, #f1f1f1 50%, #e1e1e1 51%, #f6f6f6 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(50%,#f1f1f1), color-stop(51%,#e1e1e1), color-stop(100%,#f6f6f6)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 ); /* IE6-9 */
+}
+.btn.btn-danger {
+	height: 20px;
+	border: 1px solid #ddd;
+	padding: 5px;
+	text-decoration: none;
+	margin-right: 10px;
+	border-radius: 3px;
+	color: #fff;
+	background: #ff3019; /* Old browsers */
+	background: -moz-linear-gradient(top,  #ff3019 0%, #cf0404 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ff3019), color-stop(100%,#cf0404)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #ff3019 0%,#cf0404 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #ff3019 0%,#cf0404 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #ff3019 0%,#cf0404 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #ff3019 0%,#cf0404 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff3019', endColorstr='#cf0404',GradientType=0 ); /* IE6-9 */
+}
+
+.btn:hover {
+	padding: 5px;
+}
+.aba_inter {
+
+}
+.aba_inter li{
+	float: left;
+	margin-left: 5px;
+}
+
+.aba_inter li a{
+	text-decoration: none;
+	height: 20px;
+	width: 100px;
+	padding: 10px;
+}
+
+.aba_inter li a:hover{
+	background-color: #eee;
+}
+
+.aba_inter li.active a{
+	background-color: #efefef;
+	border-top: 1px solid #ddd;
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+}
+.ls_ord {
+	list-style: none;
+	width: 100%;
+}
+
+.ls_ord li{
+	list-style: none;
+	width:15px;
+	border: 1px solid #eee;
+	border-radius: 3px;
+	width: 100%;
+	padding: 5px;
+	margin-bottom: 5px;
+	cursor: move;
+	background-color: #fafafa;
+}
+.ls_ord li:hover{
+	background-color: #eee;
+}
+
+.dataTables_paginate {
+	margin-top: 10px;
+	float: right;
+}
+.dataTables_info {
+	font-family: Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica;
+	font-size: 13px;
+	color: #777777;
+	line-height: 15px;
+	margin-top: 10px;
+}
+.dataTables_paginate span {
+	color: #333;
+	font-size: 13px;
+	margin-right: 3px;
+}
+.paginate_button {
+	background-color:#dddddd;
+	border:1px solid #bdbdbd;
+	display:inline-block;
+	cursor:pointer;
+	color:#777777;
+	font-family:Arial;
+	font-size:13px;
+	padding:3px 5px;
+	text-decoration:none;
+}
+.paginate_button:active {
+	position:relative;
+	top:1px;
+}
+.paginate_active {
+	background-color:#98b3ff;
+	border:1px solid #bdbdbd;
+	display:inline-block;
+	cursor:pointer;
+	color:#777777;
+	font-family:Arial;
+	font-size:13px;
+	padding:3px 5px;
+	text-decoration:none;
+}
+.paginate_active:active {
+	position:relative;
+	top:1px;
+}
+.dataTables_length {
+  font-family: Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica;
+  font-size: 13px;
+  color: #777777;
+  line-height: 15px;
+  display: inline-block;
+}
+
+.dataTables_filter {
+  font-family: Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica;
+  font-size: 13px;
+  color: #777777;
+  line-height: 15px;
+  display: inline-block;
+  float: right;	
+}
+
+/* MODAL - INICIO */
+.modal-int {
+  position: fixed;
+  border: 1px solid #bbb;
+  background-color: #fff;
+  align-content: center;
+  top: 15%;
+  max-width: 700px;
+  width: 700px;
+  padding: 20px 20px 10px 20px;
+}
+.bg-black {
+  background-color: #333;
+  opacity: 0.7;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+/* MODAL - FIM */

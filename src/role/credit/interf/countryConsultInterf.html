@@ -1,0 +1,80 @@
+
+<BODY bgColor=#ffffcc>
+
+ <TABLE width="100%" cellspacing=0 cellpadding=5 border=0><FONT face=arial color=#000066 size=2><b>
+     
+<?php  $i = 0;
+	
+	$cur = odbc_result ($db, "");
+
+  while(odbc_fetch_row($country)):      
+     $nameExpo          = odbc_result($country, 11);  
+     $ExpoCi            = odbc_result($country, 1); 
+     $nameImport        = odbc_result($country, 2); 
+     $importCoface      = odbc_result($country, 3);
+     $importPais        = odbc_result($country, 5); 
+     $solicitadoCredit  = odbc_result($country, 4); 
+     $concedido         = odbc_result($country, 6);
+     $idImporter        = odbc_result($country, 8);
+     $nomePais          = odbc_result($country, 10);
+	$i++;
+
+	
+	print("<tr ");
+      ($i % 2 == 0) ?  print("bgcolor = #eaeab4"): print(" "); 
+     	print(" align=center></font face=arial size=2>");   
+
+
+
+     $concCredit = $concedido;
+  
+     $soma += $concedido;
+
+     $somaExposicaoMax = $soma;
+
+     $somaExposicaoMax = number_format($somaExposicaoMax, 2, ",", ".");
+
+
+     $solicitadoCredit = number_format($solicitadoCredit, 2, ",", ".");
+     $concedido = number_format($concedido, 2, ",", ".");
+     $concCredit = number_format($concCredit, 2, ",", ".");
+
+	
+
+?>
+
+
+
+	<tr>
+   	<td><FONT face=arial size=3 color=#000066><?php echo $nomePais?></font></td>
+      </tr>
+      <tr>
+        <td><FONT face=arial color=#000066>Exposição Máxima: US$ <?php echo $somaExposicaoMax?></font></td>
+      </tr>
+      <tr>
+        <td><FONT face=arial color=#000066><?php echo $nameExpo?> Ci Exportador=<?php echo $ExpoCi?> US$<?php echo $concedido?></font></td>
+      </tr>
+</table>
+   <TABLE width=100% cellspacing=0 border=0>
+        <TR bgcolor=#cccccc>
+          <th align=center><FONT face=arial size=2 color=#000066>Importador</font></th>
+          <th align=center><FONT face=arial size=2 color=#000066>Ci Importador</font></th>
+          <th align=center><FONT face=arial size=2 color=#000066>Crédito Solicitado US$</font></th>
+          <th align=center><FONT face=arial size=2 color=#000066>Crédito Concedido US$</font></th>
+        </TR>
+
+        <TR>
+          <th align=center><FONT face=arial size=2 color=#000066><a href=Credit.php?comm=showBuyers&idBuyer=<?php echo $id?>><?php echo $nameImport?></a></font></form></th>
+          <th align=center><FONT face=arial size=2 color=#000066><?php echo  $importPais?>/<?php echo $importCoface?></font></th>
+          <th align=center><FONT face=arial size=2 color=#000066><?php echo  $solicitadoCredit ?></font></th>
+          <th align=center><FONT face=arial size=2 color=#000066><?php echo  $concCredit ?></font></th>
+ 	  
+        </TR>
+
+<?php  endWhile;
+?>
+    
+	  
+</b>
+</table>
+

@@ -1,0 +1,153 @@
+<HTML><HEAD><TITLE>SBCE: Informe</TITLE>
+<META content="text/html; charset=windows-1252" http-equiv=Content-Type>
+<? require ("../../../../site/includes/sbce.css"); ?>
+
+<? if($user -> hasRole("client")){ ?>
+<p align=center class="subtitulo">Demonstrativo do Faturamento de An&aacute;lise e Monitoramento</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<? } ?>
+
+<?
+$ano = substr($anoMes, 0, 4);
+$mes = substr($anoMes, 5);
+
+$cur = odbc_exec($db, "SELECT name FROM Inform WHERE id = $idInform");
+$name = "";
+if (odbc_fetch_row($cur)){
+  $name = odbc_result($cur, 1);
+}
+?>
+
+<p class="textoBold">&nbsp;&nbsp;&nbsp;&nbsp;Cobrança referente <?= "$mes/$ano" ?></p>
+<p class="textoBold">&nbsp;&nbsp;&nbsp;&nbsp;Segurado: <?= $name ?></strong></p>
+<br>
+<table width=100% cellspacing=0 cellpadding=2 align="center">
+<tr class="bgAzul">
+<th align=center class="bgAzul">Importador</th>
+<th align=center class="bgAzul">País</th>
+<th align=center class="bgAzul">Crédito Solicit.<br>US$ Mil</th>
+<th align=center class="bgAzul">Crédito Conced.<br>US$ Mil</th>
+<th align=center class="bgAzul">Análise<br>R$</th>
+<th align=center class="bgAzul">Monitor.<br>R$</th>
+<th align=center class="bgAzul">Total<br>R$</th>
+<th align=center class="bgAzul">Motivo</th></tr>
+
+<?
+// $date = date ("Y-m-d", mktime (0, 0, 0, $mes + 1,1, $ano));
+// $query = '';
+// if($generated){ // se ja fechou o mes
+//   $query =
+//      "
+// SELECT imp.name AS impName, c.name AS countryName, ir.creditSolic, ir.credit, er.txAnalyse, er.txMonitor, ir.monitor, ir.analyse
+// FROM ExporterReport er
+//   JOIN ImporterReport ir ON ir.idExporterReport = er.id
+//   JOIN Importer imp ON ir.idImporter = imp.id
+//   JOIN Country c ON imp.idCountry = c.id
+// WHERE er.idInform = $idInform AND (ir.monitor <> 0 OR ir.analyse <> 0)
+//       AND month = $mes AND year = $ano AND imp.c_Coface_Imp > 0
+// ORDER BY imp.name
+// ";
+// }else{ // nao fechou o mes
+//   $query =
+//      "
+// SELECT imp.name AS impName, c.name AS countryName, cc.creditSolic, cc.creditTemp, cc.credit,
+//        cc.limTemp, inf.txAnalize AS txAnalyse, inf.txMonitor, cc.monitor, cc.analysis AS analyse
+// FROM Inform inf
+//   JOIN Importer imp ON imp.idInform = inf.id
+//   JOIN Country c ON imp.idCountry = c.id
+//   JOIN ChangeCredit cc ON cc.idImporter = imp.id
+// WHERE inf.id = $idInform AND (cc.monitor <> 0 OR cc.analysis <> 0)
+//   AND cc.id IN (
+//     SELECT MAX (id)
+//     FROM ChangeCredit
+//     WHERE (stateDate <= '$date')
+//       AND (state = 2 OR state = 4 OR state = 5 OR state = 6 OR state = 7)
+//     GROUP BY idImporter
+//   )
+//   AND imp.c_Coface_Imp > 0
+// ORDER BY imp.name
+// ";
+// }
+
+require('fechamento.php');
+
+$cur = odbc_exec($db, $query);
+
+//echo "<pre>$query</pre>";
+$count = 0;
+
+while(odbc_fetch_row($cur)){
+  $impName     = odbc_result($cur, 'impName');
+  $countryName = odbc_result($cur, 'countryName');
+  $creditSolic = odbc_result($cur, 'limCredit') / 1000;
+  $credit      = odbc_result($cur, 'credit') / 1000;
+  $creditTemp  = odbc_result($cur, 'creditTemp') / 1000;
+  $limTemp     = odbc_result($cur, 'limTemp');
+
+  $monitor = 0;
+  $mot = '';
+  if(odbc_result($cur, 'monitor') > 0){
+    $monitor = odbc_result($cur, 'txMonitor') / 4;
+    $totM += $monitor;
+    $mot = 'Monitoramento';
+  }
+
+  $analyse = 0;
+  if(odbc_result($cur, 'analyse') > 0){
+    $analyse = odbc_result($cur, 'txAnalyse');
+    $totA += $analyse;
+    $mot .= ($mot != '' ? ' e ' : '' ). 'Análise';
+  }
+
+  if($limTemp <> '' && $creditTemp > 0){
+    $credit += $creditTemp;
+  }
+?>
+
+<tr<?= ($count % 2) ? "" : " bgcolor=#e9e9e9" ?>>
+   <td class="texto"><?= $impName ?></td>
+   <td class="texto"><?= $countryName ?></td>
+   <td class="texto" align=center><?= number_format($creditSolic, 0, ',', '.') ?></td>
+   <td class="texto" align=center><?= $credit == '' ? '0' : number_format($credit, 0, ",", ".") ?>&nbsp;</td>
+   <td class="texto" align=center><?= $analyse != 0 ? number_format($analyse, 2, ',', '.') : '&nbsp;' ?></td>
+   <td class="texto" align=center><?= $monitor != 0 ? number_format($monitor, 2, ',', '.') : '&nbsp;' ?></td>
+   <td class="texto" align=center><?= number_format($monitor + $analyse, 2, ',', '.') ?></td>
+   <td class="texto" align=center><?= $mot ?></td>
+</tr>
+
+<?
+   $count++;
+}
+?>
+
+<tr bgcolor="#cccccc">
+<th colspan=4 align="left" class="textoBold">Total</th>
+<th class="textoBold"><?= $totA > 0 ? number_format($totA, 2, ',', '.') : '&nbsp;' ?></th>
+<th class="textoBold"><?= $totM > 0 ? number_format($totM, 2, ',', '.') : '&nbsp;' ?></th>
+<th class="textoBold"><?= number_format($totA + $totM, 2, ',', '.') ?></th>
+<th class="textoBold">&nbsp;</th>
+</tr>
+</table>
+<p>&nbsp;</p>
+
+<? if($origem == 1){ ?>
+<form action="<?= $root ?>role/credit/Credit.php">
+<input type=hidden name=comm value="resMonitor">
+<? }else if($origem == 2){ ?>
+<form action="<?= $root ?>role/searchClient/ListClient.php">
+<input type=hidden name=comm value="view">
+<? }else{ ?>
+<form action="<?= $root ?>role/client/Client.php">
+<input type=hidden name=comm value="open">
+<? } ?>
+<input type=hidden name=mes value="<?= $mes ?>">
+<input type=hidden name=ano value="<?= $ano ?>">
+<input type=hidden name=idInform value="<?= $idInform ?>">
+<div align=center>
+<input type=submit class="servicos" value="Voltar">
+</div>
+</form>
+<hr>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?= $root?>role/credit/interf/Demonstrativo.php?idInform=<?= $idInform ?>&mes=<?= $mes?>&ano=<?= $ano?>&key=<?= session_id().time() ?>" target=_blank>
+Versão em pdf desta página</a>

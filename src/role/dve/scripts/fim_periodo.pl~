@@ -1,0 +1,108 @@
+#!/usr/bin/perl
+# Verifica se o final do período da DVE já se esgotou
+
+#################################################################################
+# pacote Temp: usado apenas para testes no linux, já q nao tem o modulo Win32::ODBC no esfiha
+package Temp;
+sub new{ return bless {}; }
+sub Sql{ return 1; }
+sub FetchRow{ return 1; }
+sub Close{ return 1; }
+sub Data{ return 1; }
+sub RowCount{ return 1; }
+#################################################################################
+
+package main;
+
+@argv = &process(@ARGV);
+
+if($temp){ # se estamos usando o pacote Temp
+    print "using Temp...\n";
+    $db = new Temp;
+}else{
+    eval 'use Win32::ODBC';
+    # abre a conexao com o banco de dados
+    eval "\$db = new Win32::ODBC(\"dsn=sbce;UID=sa;PWD=\")";
+    if($@){ # se nao conseguiu abrir o BD, cai fora
+	die "Nao consegui me conectar ao banco de dados: $DBI::errstr\n$@\n";
+    }
+}
+
+&query("select id from DVE where state=2"); # DVEs q já foram enviadas
+while($db->FetchRow){
+    ($aux) = $db->Data;
+    push @ids, $aux;
+}
+
+for $idDVE (@ids){
+    # nem sei se vao usar todos os campos deste SELECT
+    &query("SELECT d.idInform, d.state, d.AR, d.total2, d.total3,
+            d.nCompr2, d.nCompr3, d.inicio, d.periodo, d.num, d.bornDate,
+            d.sentDate, d.gerDate, d.recDate, i.name FROM
+            DVE d join Inform i on d.idInform=i.id where d.id=$idDVE");
+    ($idInform, $state, $ar_code,
+     $total2, $total3, $nCompr2,
+     $nCompr3, $inicio, $periodo,
+     $num, $bornDate, $sentDate,
+     $gerDate, $recDate, $name) = $db->Data;
+    if($se_passaram_n_dias){ # se já se passaram n dias (n ainda será decidido), gera notificacao
+	&query("insert into NotificationR (cookie, state, notification) values ('', 1, 'Comitê de Cancelamento [$name]')");
+	&query("select max(id) from NotificationR");
+	$db->FetchRow;
+	($idNotification) = $db->Data;
+	&query("update NotificationR set link='../dve/Dve.php?comm=comite&idDVE=$idDVE&idNotification=$idNotification'
+                where id=$idNotification");
+	# gera notificacao pro funcionario com role dve
+	&query("insert into RoleNotification (idRole, idNotification) values (16, $idNotification)");
+    }
+}
+
+############################################################
+# executa uma query, devolve o numero de linhas resultantes
+sub query{
+    my ($q, $verbose) = @_;
+
+    print "$q\n" if $verbose;
+    $db->Sql($q);
+    return $db->RowCount;
+}
+
+############################################################
+# mostra os resultados de uma query
+sub show_results{
+    while ($db->FetchRow) {
+	for my $val ($db->Data){
+	    print "$val ";
+	}
+	print "\n";
+    }
+}
+
+################################
+# transforma a data de 2002-09-10 para 10/09/2002
+sub ymd2dmy{
+    my $date = shift;
+    my ($a, $m, $d) = $date =~ /(\d\d\d\d)-(\d\d)-(\d\d)/;
+    return "$d/$m/$a";
+}
+
+sub process{ # processa os argumentos
+    my @v;
+    for (@_){
+	if(/^-temp$/){
+	    $temp = 1; # indica que vai usar o pacote Temp
+	}elsif(/^-help$/){
+	    &show_help();
+	}else{
+	    push @v, $_;
+	}
+    }
+    return @v;
+}
+
+sub show_help{
+    print <<HELP;
+Uso: $0 [-temp]
+HELP
+    exit;
+}

@@ -1,0 +1,35 @@
+<?php
+	header("Content-Type: text/html; charset=iso-8859-1",true);
+
+	define('ENV', 'development');
+	define('SALT', '$2a$07$9j6459sdgsrt959345h49236gfddf987g$');
+
+	$conn = [
+		'development' => [
+			'DNS' => 'SBCE_i',
+			'user' => 'interaktiv',
+			'password' => 'inter456$%',
+		],
+		'production' => [
+			'DNS' => 'SBCE',
+			'user' => 'SIGA',
+			'password' => 'InterX%gF1!2019',
+		],
+	];
+  
+	// Minha conexão
+	// $dbSisSeg=odbc_connect("SisSeg","sun","sunsys", "");
+	// $dbOIM=odbc_connect("OIM","oim","oim", "");
+	$dbSisSeg = false;
+	$dbOIM = false;
+
+	if(ENV == 'development'){
+		ini_set('display_errors', 1);
+		ini_set('display_startup_errors', 1);
+		error_reporting(E_ALL);
+	}
+
+	$db = odbc_connect($conn[ENV]['DNS'], $conn[ENV]['user'], $conn[ENV]['password'], 1);
+  
+	$hostImagem = 'http://'.$_SERVER['HTTP_HOST'].'/siga/'; //na Web
+?>

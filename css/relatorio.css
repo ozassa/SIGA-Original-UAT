@@ -1,0 +1,52 @@
+/* tabela padrão - aplicação automática - início */
+table 					{border-collapse:collapse; width:100%; border:1px solid #cccccc; font:normal 12px Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; color:#777777; background:#eeeeee;}
+caption 				{text-align:left; font:normal 22px Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; background:transparent; padding:6px 4px 8px 0px; color:#777777;}
+td, th 					{border:1px dotted #cccccc; padding:8px; color:#777777;}
+thead th				{font:bold 13px Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; border:1px solid #888888; text-align:left; background:#999999; color:#FFFFFF; padding:8px;}
+tfoot th 				{font:bold 13px Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; border:1px solid #888888; text-align:left; background:#999999; color:#FFFFFF; padding:8px;}
+tbody td a, tbody th a							{background:transparent; text-decoration:none; color:#777777; font:normal 12px Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica;}
+tbody td a:hover, tbody th a:hover 				{background:#f9f9f9; color:#777777;}
+tbody td .iconetabela, tbody th .iconetabela 	{background-color:transparent; padding:-6px; margin:-4px; text-align:center;}
+tbody th, tbody td 		{vertical-align:top; text-align:left;}
+tfoot td 				{border:1px solid #888888; background:#999999; padding-top:3px; color:#FFFFFF;}
+.odd 					{background: #f9f9f9;}
+.tabela01 .odd:hover	{background:#f4fbfe;}
+tbody tr:hover{background: #f4fbfe; border: 1px solid #cccccc; color:#FFFFFF;}
+tbody tr:hover th, tbody tr.odd:hover th {background: #f4fbfe; color:#FFFFFF;}
+/* tabela padrão - aplicação automática - fim */
+
+
+/* tabela padrão - aplicação automática - início */
+.tabela01 		 		{border-collapse:collapse; width:100%; border:1px solid #cccccc; background:#fcfaef;}
+.tabela01 table 		{border-collapse:collapse; width:100%; border:1px solid #cccccc; font:normal 12px Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; color:#777777; background:#fcfaef;}
+.tabela01 caption 		{text-align:left; font:normal 22px Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; background:transparent; padding:6px 4px 8px 0px; color:#777777;}
+.tabela01 td, th 		{border:1px dotted #cccccc; padding:8px; color:#777777; background:none;}
+.tabela01 thead th		{font:bold 13px Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; border:1px solid #888888; text-align:left; background:#999999; color:#FFFFFF; padding:8px;}
+.tabela01 tfoot th 		{font:bold 13px Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; border:1px solid #888888; text-align:left; background:#999999; color:#FFFFFF; padding:8px;}
+.tabela01 tbody td a, tbody th a							{background:none; text-decoration:none; color:#777777; font:normal 12px Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica;}
+.tabela01 tbody td a:hover, tbody th a:hover 				{background:none; color:#777777;}
+.tabela01 tbody td .iconetabela, tbody th .iconetabela 	{background:none; padding:-6px; margin:-4px; text-align:center;}
+.tabela01 tbody th, tbody td 	{vertical-align:top; text-align:left; background:#FFFFFF;}
+.tabela01 tfoot td 		{border:1px solid #888888; background:none; padding-top:3px; color:#FFFFFF;}
+.tabela01 .odd 			{background:#FFFFFF;}
+.tabela01 .odd:hover	{background:#f4fbfe;}
+tbody tr:hover{background: #ECF5FF; border: 1px solid #cccccc; color:#FFFFFF;}
+tbody tr:hover th, tbody tr.odd:hover th {background: #f4fbfe; color:#FFFFFF;}
+/* tabela padrão - aplicação automática - fim */
+
+
+/* relatório 
+.tabela 					{border-collapse:collapse; width:100%; font:normal 12px Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; color:#777777; background:#fff; margin-bottom:20px;}
+.tabela caption 			{text-align:left; font:normal 22px "Frutiger", Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; background:transparent; padding:6px 4px 8px 0px; color:#111111;}
+.tabela td, th 				{border-bottom:1px solid #d4d0cc; padding:8px; color:#111111;}
+.tabela thead th 			{font:bold 16px Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; border-bottom:1px dotted #847561; text-align:left; background:#51422e; color:#fff; padding:8px;}
+.tabela tfoot th 			{font:bold 16px Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica; border-bottom:1px dotted #847561; text-align:left; background:#ffffff; color:#FFFFFF; padding:8px;}
+.tabela tbody td a, tbody th a							{background:transparent; text-decoration:none; color:#111111; font:bold 12px Arial, "Trebuchet MS", Verdana, Tahoma, Helvetica;}
+.tabela tbody td a:hover, tbody th a:hover 				{color:#000000; text-decoration:underline;}
+.tabela tbody td .iconetabela, tbody th .iconetabela 	{background-color:transparent; padding:-6px; margin:-4px; text-align:center;}
+.tabela tbody th, tbody td 	{vertical-align:top; text-align:left;}
+.tabela tfoot td 			{border:1px solid #888888; background:#999999; padding-top:3px; color:#FFFFFF;}
+.tabela .odd 				{background: #e9e6e1;}
+.tabela tbody tr:hover 		{background: #d5cec5; border-bottom: 1px dotted #847561; color:#FFFFFF;}
+.tabela tbody tr:hover th, tbody tr.odd:hover th {background: #fcce15; color:#FFFFFF;}	
+*/

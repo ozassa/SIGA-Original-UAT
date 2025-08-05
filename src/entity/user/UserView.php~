@@ -1,0 +1,29 @@
+<?
+class UserView {
+  var $roles;
+  var $id;
+  var $name;
+
+  function UserView ($id, $name, $r) {
+    $this->id = $id;
+    $this->name = $name;
+    $this->roles = $r;
+  }
+
+  function hasRole ($r) {
+    if (!is_null($this->roles[$r]))
+      return true;
+    else 
+      return false;
+  }
+
+  function dump () {
+    echo "<br>id[$this->id] name[$this->name]";
+    echo "<ul>";
+    foreach ($this->roles as $r) {
+      echo "<li>$r</li>";
+    }
+    echo "</ul>";
+  }
+}
+?>

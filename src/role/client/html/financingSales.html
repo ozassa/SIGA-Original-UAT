@@ -1,0 +1,382 @@
+<!-- saved from url=(0022)http://internet.e-mail -->
+
+<HTML><HEAD><TITLE>SBCE: Informe</TITLE>
+
+
+
+<META content="text/html; charset=windows-1252" http-equiv=Content-Type>
+
+
+
+<STYLE type=text/css>TD {
+
+
+
+	COLOR: #000066; FONT-FAMILY: Arial,Helvetica; FONT-SIZE: 10pt; FONT-WEIGHT: bold
+
+
+
+}
+
+
+
+BODY {
+
+
+
+	COLOR: #000066; FONT-FAMILY: Arial,Helvetica; FONT-SIZE: 10pt; FONT-WEIGHT: bold
+
+
+
+}
+
+
+
+P {
+
+
+
+	COLOR: #000066; FONT-FAMILY: Arial,Helvetica; FONT-SIZE: 10pt; FONT-WEIGHT: bold
+
+
+
+}
+
+
+
+A {
+
+
+
+	COLOR: #000066; FONT-FAMILY: Arial,Helvetica; FONT-SIZE: 10pt; FONT-WEIGHT: bold
+
+
+
+}
+
+
+
+A:active {
+
+
+
+	COLOR: #ff0000; FONT-FAMILY: Arial,Helvetica; FONT-SIZE: 10pt; FONT-WEIGHT: bold
+
+
+
+}
+
+
+
+</STYLE>
+
+
+
+
+
+
+
+</HEAD>
+
+
+
+<BODY bgColor=#ffffcc leftMargin="5" topMargin="5" marginheight="5" marginwidth="5">
+
+
+
+<DIV align=center>
+
+
+
+
+
+
+
+<script>
+
+
+
+function calc (form) {
+
+
+
+   ace = form.ace.value;
+
+
+
+   proex = form.proex.value;
+
+
+
+   tot = ace/1 + proex/1;
+
+
+
+   b = form.b.value;
+
+
+
+   c = form.c.value;
+
+
+
+   perc = 0;
+
+
+
+   if (b/1 + c/1 > 0) {
+
+
+
+     perc = tot / (b/1 + c/1);
+
+
+
+   }
+
+
+
+//   verErro("ace["+ ace+ "] proex["+ proex +"] tot ["+ tot +"] b["+ b +"] c["+ c +"] perc ["+ perc +"]");
+
+
+
+   form.tot.value = tot;
+
+
+
+   form.perc.value = perc;
+
+
+
+}
+
+
+
+</script>
+
+
+
+
+
+
+
+<TABLE border=0 cellPadding=0 cellSpacing=0 height=34 width="96%">
+
+
+
+  <TBODY>
+
+
+
+  <TR>
+
+
+
+    <TD width="200" align="left"><IMG alt="" src="images/inf.gif" border=0></TD>
+
+
+
+    <TD width="100%" align="left">&nbsp;<!--<IMG alt="" border=0 src="images/44.gif">--></TD>
+
+
+
+  </TR>
+
+
+
+  </TBODY>
+
+
+
+</TABLE>
+
+
+
+
+
+
+
+
+
+<FORM action="informe.php" method="post" name="">
+
+
+
+<input type=hidden name="comm" value="prevSubmit">
+
+
+
+<input type=hidden name="id" value="30">
+
+
+
+<input type=hidden name="b" >
+
+
+
+<input type=hidden name="c" >
+
+
+
+<TABLE border="0" borderColor=#00ccff cellSpacing=0 cellpadding="2" width="96%">
+
+
+
+  <TBODY>
+
+
+
+  <TR bgcolor="#cccccc">
+
+
+
+    <TD colspan="4"  align="middle">QUADRO III - PrevisÃ£o de Financiamento para o Volume de Vendas Externas - Campos "B" e "C" do Quadro I</TD>
+
+
+
+  </TR>
+
+
+
+  <TR>
+
+
+
+    <TD colspan="4" >&nbsp;</TD>
+
+
+
+  </TR>
+
+
+
+
+
+
+
+  <TR bgColor=#00ccff>
+
+
+
+    <TD  align="middle">ACE - US$ mil</TD>
+
+    
+
+    <TD  align="middle">BNDES-US$ mil</TD>
+
+    
+
+    <TD  align="middle">PROEX - US$ mil</TD>
+
+    
+
+    <TD  align="middle">Total - US$ mil</TD>
+
+    
+
+    <TD  align="middle">Percentual (Total financiado / B + C)</TD>
+
+  
+
+  </TR>
+
+
+
+  <TR>
+
+
+
+    <TD  align="middle"><input size="15" onBlur="calc(this.form)" name="ace" ></TD>
+
+
+
+    <TD  align="middle"><input size="15" onBlur="calc(this.form)" name="bndes" ></TD>
+
+
+
+    <TD  align="middle"><input size="15" onBlur="calc(this.form)" name="proex" ></TD>
+
+    
+
+    <TD  align="middle"><input size="15" onBlur="calc(this.form)" name="total" ></TD>
+
+    
+
+    <TD  align="middle"><input size="15" onBlur="calc(this.form)" name="percentual"></TD>
+
+    
+
+    <TD  align="middle"></TD>
+
+
+
+    <TD  align="middle">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+
+
+
+  </TR>
+
+
+
+  </TBODY>
+
+
+
+</TABLE>
+
+
+
+
+
+
+
+<P>&nbsp;</P>
+
+
+
+<P>&nbsp;</P>
+
+
+
+
+
+
+
+<A href="segmentationSales.html">VOLTAR</A>
+
+<A href="mainPurchasers.html">OK</A>
+
+<A href="http://www.sbce.com.br">Cancelar</A>
+
+
+
+
+
+</FORM>
+
+
+
+
+
+
+
+
+
+</DIV>
+
+
+
+
+
+
+
+</BODY>
+
+
+
+</HTML>
+
+
+
+
+

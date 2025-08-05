@@ -1,0 +1,443 @@
+<?
+$renov = esta_em_renovacao($idInform);
+?>
+<script language="JavaScript" src="<?= $root ?>scripts/utils.js"></script>
+<script>
+function checkDecimals(fieldName, fieldValue) {
+  if (fieldValue == "") {
+    alert("Preenchimento obrigatório.");
+    fieldName.select();
+    fieldName.focus();
+  } else {
+    err = false;
+    dec = ",";
+    mil = ".";
+    v = "";
+    c = "";
+    len = fieldValue.length;
+    for (i = 0; i < len; i++) {
+      c = fieldValue.substring (i, i+1);
+      if (c == dec) { break; }
+      if (c != mil) {
+        if (isNaN(c)) {
+          err = true;
+          alert("Este não é um número válido.");
+          fieldName.select();
+          fieldName.focus();
+          break;
+        } else {
+          v += c;
+        }
+      }
+    }
+
+    if (!err) {
+      if (i == len) {
+        v += "00";
+      } else {
+        if (c == dec) i++;
+        if (i == len) {
+          v += "00";
+        } else {
+          c = fieldValue.substring (i, i+1);
+          if (isNaN(c)) {
+            alert("Este não é um número válido.");
+            fieldName.select();
+            fieldName.focus();
+            err = true;
+          } else {
+            v += c;
+          }
+        }
+        i++;
+        if (!err && i == len) {
+          v += "0";
+        } else {
+          c = fieldValue.substring (i, i+1);
+          if (isNaN(c)) {
+            alert("Este não é um número válido.");
+            fieldName.select();
+            fieldName.focus();
+            err = true;
+          } else {
+            v += c;
+          }
+        }
+      }
+      fieldValue = "," + v.substring (v.length - 2, v.length);
+      v = v.substring (0, v.length - 2);
+      while (v.length > 0) {
+        t = v.substring (v.length >= 3 ? v.length - 3 : 0, v.length);
+        v = v.substring (0, v.length >= 3 ? v.length - 3 : 0);
+        fieldValue = (v.length > 0 ? "." : "") + t + fieldValue;
+      }
+      fieldName.value = fieldValue;
+    }
+  }
+}
+
+function consist (form) {
+  msg = "";
+  if (form.name.value == "") { msg += "Razão Social Completa\n"; }
+  if (form.address.value == "") { msg += "Endereço\n"; }
+  if (form.city.value == "") { msg += "Cidade\n"; }
+  if (form.cep.value == "") { msg += "CEP\n"; }
+  if (form.tel.value == "") { msg += "Telefone\n"; }
+  if (form.fax.value == "") { msg += "FAX\n"; }
+  if (form.contact.value == "") { msg += "Contato\n"; }
+  if (form.relation.value == "") { msg += "Relação Comercial\n"; }
+  if (form.prevExp12.value == "") { msg += "Previsão de Exportação\n"; }
+  if (form.numShip12.value == "") { msg += "Número de Embarques\n"; }
+  if (form.periodicity.value == "") { msg += "Periodicidade\n"; }
+  if (form.przPag.value == "") { msg += "Prazo de Pagamento\n"; }
+  if (msg != "") {
+    alert ("Favor preencher as seguintes informações:\n"+ msg);
+  }else{
+    <? if ($idBuy > 0 && $comm=="altBuy") { ?>
+    form.comm.value='setAltBuy';
+    <? }else{ ?>
+    form.comm.value='insBuy';
+    <? } ?>
+
+<? if($renov) {?>
+  if((form.includeOld[0].checked && confirm('Confirma inclusao de importador na apólice vigente e no estudo da renovação?')) ||
+     form.includeOld[1].checked)
+<? } ?>
+    form.submit();
+  }
+}
+</script>
+
+<?
+$c = odbc_exec($db, "select idAnt, state from Inform where id=$idInform");
+$idAnt = odbc_result($c, 1);
+$informState = odbc_result($c, 2);
+if($idAnt){ // verifica se é renovacao de um informe q ainda esta em vigor
+//   $x = odbc_exec($db, "select state from Inform where id=$idAnt and endValidity >= getdate()");
+//   $stateAnt = odbc_result($x, 1);
+//   if($stateAnt == 10){
+//     $pode_incluir = 1; // significa q pode incluir no outro informe
+//   }
+  $idVigente = $idAnt;
+  $pergunta = "Incluir importador na apólice vigente?";
+}else{ // verifica se este informe tem uma renovacao ativa
+  $x = odbc_exec($db, "select state from Inform where idAnt=$idInform");
+  $stateOther = odbc_result($x, 1);
+  if($stateOther >= 1 || $stateOther <= 6){
+    $pode_incluir = 1; // significa q pode incluir no outro informe
+  }
+  $idVigente = $idInform;
+  $pergunta = '';//"Incluir importador na apólice de renovação?";
+}
+?>
+
+<DIV align=center>
+<FORM action="<?= $root ?>role/inform/Inform.php" method="post" name="altform">
+<input type=hidden name="comm" value="buySubmit">
+<input type=hidden name="idBuy" value="<?= $idBuy ?>">
+<input type=hidden name="id" value="<?= $id ?>">
+<input type=hidden name="idInform" value="<?= $idInform ?>">
+<input type=hidden name="idNotification" value="<?= $idNotification ?>">
+<input type=hidden name="volta" value="<?= $volta ?>">
+<input type=hidden name="risk" value="1">
+<input type=hidden name="idVigente" value="<?= $idVigente ?>">
+
+<TABLE border="0" cellSpacing=0 cellpadding="2" width="98%" align="center">
+  <TR>
+    <TD colspan="5" class="verm" align="center">&nbsp;<?= $msgInc ?><br><br><br></TD>
+  </TR>
+  <TR class="bgCinza">
+    <TD colspan="5" align="center" class="bgCinza">QUADRO III - <?= $idAnt ? '' : 'Principais' ?> Compradores</TD>
+  </TR>
+  <TR>
+    <TD colspan="5">&nbsp;</TD>
+  </TR>
+  <TR>
+    <TD align="justify" colspan="5" class="texto">Observação: Para cadastrar a Razão Social do Importador, não utilize apóstrofo ( ' ).  Em caso de dúvida, entre em contato conosco:  <ul><li>São Paulo, ligue (11) 3284-3132; <li>Rio Grande do Sul e Santa Catarina, ligue (47) 455-0455; <li>Demais localidades, ligue (21) 2510-5027.</TD>
+  </TR>
+  <TR>
+    <TD colspan="5">&nbsp;</TD>
+  </TR>
+
+  <!-- início de um importador ' -->
+  <TR class="bgAzul">
+    <TD colspan=5 align="center" class="bgAzul">Importadores Incluídos</TD>
+  </tr>
+
+<?
+
+  $cur = odbc_exec($db,
+		   "SELECT imp.name, address, city, c.name, tel, prevExp12, numShip12,
+                           periodicity, przPag, imp.id, cep, fax, contact, relation, seasonal
+                    FROM Importer imp JOIN Country c ON (idCountry = c.id)
+                    WHERE idInform = $idInform AND state <> '7' AND state <> 9
+                    AND imp.id not in (select distinct idImporter from ImporterRem)
+                    ORDER BY imp.id");
+  $i = $soma = 0;
+
+  while (odbc_fetch_row($cur)) {
+    if($comm != "altBuy" && odbc_result($cur, 10) == $idBuy){
+      //$soma += ($prevExp12 * 1000);
+      //echo "somando: comm=$comm, prev=$prevExp12, soma=$soma<br>";
+    }else{
+      $soma += odbc_result($cur, 6);
+    }
+    $i++;
+?>
+  <tr <?= ((($i % 2) != 0) ? " bgcolor=\"#e9e9e9\"" : "")?>>
+    <td rowspan=10 width="5%"><?= $i ?></td>
+    <td class="textoBold">Razão:<a name="<?= odbc_result($cur, 10) ?>"></a></td><td class="texto" colspan="3"><?= odbc_result($cur,1) ?></td>
+  </tr>
+  <tr <?= ((($i % 2) != 0) ? " bgcolor=\"#e9e9e9\"" : "")?>>
+    <td class="textoBold">Endereço:</td><td class="texto" colspan="3"><?= odbc_result($cur,2) ?></td>
+  </tr>
+  <tr <?= ((($i % 2) != 0) ? " bgcolor=\"#e9e9e9\"" : "")?>>
+<!--
+    <td class="textoBold" width="20%">Riscos!!!!!:</td><td class="texto" width="75%"><? $r = odbc_result($cur ,3); echo ($r == 1 ? "RC" : ($r == 2 ? "RP" : "RC/RP")); ?></td>
+-->
+    <td class="textoBold">Cidade:</td><td class="texto" colspan="3"><?= odbc_result($cur,3) ?></td>
+  </tr>
+  <tr <?= ((($i % 2) != 0) ? " bgcolor=\"#e9e9e9\"" : "")?>>
+    <td class="textoBold">País:</td><td class="texto" colspan="3"><?= odbc_result($cur,4) ?></td>
+  </tr>
+  <tr <?= ((($i % 2) != 0) ? " bgcolor=\"#e9e9e9\"" : "")?>>
+    <td class="textoBold">CEP:</td><td class="texto" colspan="3"><?= odbc_result($cur,11) ?>&nbsp;</td>
+  </tr>
+  <tr <?= ((($i % 2) != 0) ? " bgcolor=\"#e9e9e9\"" : "")?>>
+    <td class="textoBold" width="20%">Tel:</td><td class="texto" width="30%"><?= odbc_result($cur,5) ?></td>
+    <td class="textoBold" width="20%">FAX:</td><td class="texto" width="25%"><?= odbc_result($cur,12) ?>&nbsp;</td>
+  </tr>
+  <tr <?= ((($i % 2) != 0) ? " bgcolor=\"#e9e9e9\"" : "")?>>
+    <td class="textoBold">Contato:</td><td class="texto"><?= odbc_result($cur,13) ?>&nbsp;</td>
+    <td class="textoBold">Relação Comercial:</td><td class="texto"> desde o ano de <?= odbc_result($cur,14) ?></td>
+  </tr>
+  <tr <?= ((($i % 2) != 0) ? " bgcolor=\"#e9e9e9\"" : "")?>>
+    <td class="textoBold">Vendas Sazonais:</td><td class="texto" colspan="3"><?= odbc_result($cur,15) ? "Sim" : "Não" ?></td>
+  </tr>
+  <TR <?= ((($i % 2) != 0) ? " bgcolor=\"#e9e9e9\"" : "")?>>
+    <TD align="left" colspan="5">
+      <TABLE border="0" cellpadding="0" cellspacing="0" width="100%">
+      <TR>
+	<TD align="left" class="textoBold">Prev. Vol. Exp. </TD>
+	<TD align="left" class="textoBold">Núm. de Emb/Ano </TD>
+	<TD align="left" class="textoBold">Period. de Emb. </TD>
+	<TD align="left" class="textoBold">Prazo de Pagto.</TD>
+	<!--<TD align="left" class="textoBold">Exposição Máxima </TD>-->
+      </TR>
+      <TR>
+	<TD align="left" class="texto"><?= number_format(odbc_result($cur,6),2,",",".") ?></TD>
+        <TD align="left" class="texto"><?= odbc_result($cur,7) ?></TD>
+	<TD align="left" class="texto"><?= odbc_result($cur,8) ?></TD>
+	<TD align="left" class="texto"><?= odbc_result($cur,9) ?></TD>
+	<!--<TD align="left"></TD>-->
+      </TR>
+      </TABLE>
+    </TD>
+  </TR>
+  <TR <?= ((($i % 2) != 0) ? " bgcolor=\"#e9e9e9\"" : "")?>>
+    <TD align=right colspan="4">
+
+<input type=button class=sair value=Remover onClick="if(confirm('Remover o importador <?= odbc_result($cur,1) ?>?')){ this.form.comm.value='remBuy';this.form.idBuy.value=<?= odbc_result($cur,10) ?>;this.form.submit(); }"> /
+<input type=button class=sair value=Alterar onClick="this.form.comm.value='altBuy';this.form.idBuy.value=<?= odbc_result($cur,10) ?>;this.form.action += '#alterar';this.form.submit()">
+
+<? if($idAnt){ ?>
+/ <input type=button class=sair value="Consultar endereços" onClick="this.form.comm.value='address';this.form.idBuy.value=<?= odbc_result($cur, 10) ?>;this.form.submit()">
+<? } ?>
+
+</TD>
+  </TR>
+<?
+  }
+  if ($i == 0) {
+?>
+  <TR bgcolor="#cccccc">
+    <TD align="center" colspan=7>Nenhum importador cadastrado</TD>
+  </TR>
+<?
+  }
+?>
+</TABLE>
+
+<?
+  $var=odbc_exec(
+    $db,
+    "SELECT vol2 FROM Volume WHERE idInform = $idInform"
+  );
+
+  $prev = odbc_result($var,1);
+
+?>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<?
+  if ($idBuy > 0 && $comm == "altBuy") {
+    $rAlter = odbc_exec(
+			$db,
+			" SELECT name, address, idCountry, tel, prevExp12,
+	                    numShip12, periodicity, city, przPag, cep, fax, contact, relation, seasonal
+	                  FROM Importer WHERE id = $idBuy"
+		       );
+    if (odbc_fetch_row($rAlter)) {
+      $name 	   = odbc_result($rAlter, 1);
+      $address	   = odbc_result($rAlter, 2);
+      $idCountry   = odbc_result($rAlter, 3);
+      $tel	   = odbc_result($rAlter, 4);
+      $prevExp12   = odbc_result($rAlter, 5);
+      $numShip12   = odbc_result($rAlter, 6);
+      $periodicity = odbc_result($rAlter, 7);
+      $city	   = odbc_result($rAlter, 8);
+      $przPag	   = odbc_result($rAlter, 9);
+      $cep	   = odbc_result($rAlter, 10);
+      $fax	   = odbc_result($rAlter, 11);
+      $contact	   = odbc_result($rAlter, 12);
+      $relation	   = odbc_result($rAlter, 13);
+      $seasonal	   = odbc_result($rAlter, 14);
+      echo "Endereçoselect:$address";
+    }else{
+      $msg = "Problemas na Leitura dos Dados para Alteração";
+    }
+  }
+?>
+
+<a name="alterar"></a>
+<TABLE border=0 width="96%">
+  <TBODY>
+  <TR>
+    <TD colspan="2" align="center" class="verm">
+<?
+if($idAnt){
+  echo "Incluir os importadores novos";
+}else{
+  echo "Relacionar nesta fase, apenas os 10 importadores mais representativos";
+}
+?>
+</TD>
+  </TR>
+  <TR>
+    <TD colspan="2">&nbsp;</TD>
+  </TR>
+  <TR>
+    <TD align="left" class="textoBold" width="30%">Razão Social Completa</TD>
+    <TD align="left" width="70%"><input type="text" class="caixa" size="50" maxlength="150" name="name" value="<?= $name ?>"></TD>
+  </TR>
+  <TR>
+    <TD align="left" class="textoBold">Endereço</TD>
+    <TD align="left"><input type="text" class="caixa" size="50" maxlength="150" name="address" value="<?= $address ?>"></TD>
+  </TR>
+  <TR>
+    <TD align="left" class="textoBold">Cidade</TD>
+    <TD align="left"><input type="text" class="caixa" size="30" maxlength="100" name="city" value="<?= $city ?>"></TD>
+  </TR>
+  <TR>
+    <TD align="left" class="textoBold">País</TD>
+    <TD align="left">
+      <?
+        // Monta a lista de países
+        $sql = "SELECT id, name FROM Country ORDER BY name";
+        $sel = $idCountry;
+	$name = "idCountry";
+        require ("../../interf/Select.php");
+      ?>
+    </TD>
+  </TR>
+  <TR>
+    <TD align="left" class="textoBold">CEP</TD>
+    <TD align="left"><input type="text" class="caixa" size="30" maxlength="100" name="cep" value="<?= $cep ?>"></TD>
+  </TR>
+  <TR>
+    <TD align="left" class="textoBold">Telefone (incluir DDI e DDD)</TD>
+    <TD align="left"><input type="text" class="caixa" size="20" maxlength="50" name="tel" value="<?= $tel ?>"></TD>
+  </TR>
+  <TR>
+    <TD align="left" class="textoBold">FAX (incluir DDI e DDD)</TD>
+    <TD align="left"><input type="text" class="caixa" size="20" maxlength="50" name="fax" value="<?= $fax ?>"></TD>
+  </TR>
+  <TR>
+    <TD align="left" class="textoBold">Contato</TD>
+    <TD align="left"><input type="text" class="caixa" size="20" maxlength="50" name="contact" value="<?= $contact ?>"></TD>
+  </TR>
+  <TR>
+    <TD align="left" class="textoBold">Vendas Sazonais</TD>
+    <TD align="left"><input type="radio" name="seasonal" value="1"<?= $seasonal == "1" ? "checked" : "" ?>> Sim
+                     <input type="radio" name="seasonal" value="0"<?= $seasonal == ("0" & "") ? "checked" : "" ?>> Não</TD>
+  </TR>
+  <TR>
+    <TD align="left" class="textoBold">Relação Comercial desde o ano de</TD>
+    <TD align="left"><input type="text" class="caixa" size="20" maxlength="50" name="relation" value="<?= $relation ?>"></TD>
+  </TR>
+
+  <TR>
+    <TD align="left" colspan="2">
+      <table border="0">
+		      <TR>
+			<TD align="left" class="textoBold">Previsão Vol. Export (US$ Mil) próx. 12 meses </TD>
+			<TD align="left" class="textoBold">Nº de Embarques por ano </TD>
+			<TD align="left" class="textoBold">Periodicidade de Embarques (Dias) </TD>
+			<TD align="left" class="textoBold">Prazo de Pagamento (Dias) </TD>
+			<!--<TD align="left" class="textoBold">Exposição Máxima </TD>-->
+		      </tr>
+		      <tr>
+			<TD align="left"><input onFocus="select()" onBlur="checkDecimalsMil(this, this.value)" type="text" class="caixa" size="20" maxlength="8" name="prevExp12" value="<?= ($comm == "segVendExp" || $comm == "insBuy" || $comm == "setAltBuy" ? $prevExp12 : $prevExp12/1000) ?>"></TD>
+    <TD align="left"><input onFocus="select()" type="text" class="caixa" size="20" maxlength="4" name="numShip12" value="<?= $numShip12 ?>"></TD>
+			<TD align="left"><input onFocus="select()" type="text" class="caixa" size="20" maxlength="50" name="periodicity" value="<?= $periodicity ?>"></TD>
+			<TD align="left"><input onFocus="select()" type="text" class="caixa" size="20" maxlength="4" name="przPag" value="<?= $przPag ?>"></TD>
+<!--
+<TD align="left"><input type="text" class="caixa" size="20" maxlength="4" name="" value=""></TD>
+-->
+		      </TR>
+      </table>
+    </TD>
+  </TR>
+<? if($pode_incluir && $pergunta){ ?>
+	<tr>
+          <td align=left class="textoBold"><?= $pergunta ?></td>
+          <td align=left>
+           <input type=radio name=includeOld value=1 checked>Sim&nbsp;&nbsp;&nbsp;&nbsp;
+           <input type=radio name=includeOld value=0>Não
+          </td>
+        </TR>
+<? } ?>
+
+</TABLE>
+
+<input type=hidden name="soma" value="<?= $soma ?>">
+<input type=hidden name="prev" value="<?= $prev ?>">
+
+<? if ($msg != "") {?>
+  <p><font color="red"><?= $msg ?></font></p>
+<? } ?>
+
+<P>&nbsp;</P>
+<P><font <? $idAnt ? 'color=#000000' : "class=\"verm\"" ?>>Para cadastrar os principais compradores, preencha o formulário e clique em "Incluir"</font></P>
+
+<? if($idAnt && !$pergunta){ ?>
+<P><font class="verm">Esta solicitação de inclusão será considerada somente para o informe de renovação</font></P>
+<? } ?>
+
+<P><input type=button value=" Tela Inicial " onClick="this.form.comm.value='open';this.form.submit()" class="servicos">
+<input type=button value="Tela Anterior" onClick="this.form.comm.value='segVendExt';this.form.submit()" class="servicos">
+<?													      //if ($soma <= $prev) {
+?>
+<INPUT type=button value="<?= (($idBuy > 0 && $comm=='altBuy') ? 'Alterar' : 'Incluir') ?>" onClick="consist(this.form)" class="servicos">
+<?
+  //}
+?>
+<INPUT type=submit value=" Próxima Tela " class="servicos">
+<INPUT name=Reset type=reset value= Limpar class="servicos"></P>
+</form>
+</DIV>
+
+<? if($idAnt && $comm == 'altBuy'){ ?>
+<script language=javascript>
+var f = document.altform;
+//echo "End disbled antes:$address";
+//f.address.disabled = true;
+//echo "End disbled depois:$address";
+//f.city.disabled = true;
+//f.idCountry.disabled = true;
+//f.cep.disabled = true;
+
+</script>
+
+<? }// echo "<pre>End disbled depois:$address</pre>";
+    // echo "<pre>nome depois do disable:$name</pre>"; ?>

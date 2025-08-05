@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<TITLE></TITLE><STYLE type=text/css>TD {	COLOR: #000066; FONT-FAMILY: Arial,Helvetica; FONT-SIZE: 10pt; FONT-WEIGHT: bold}BODY {	COLOR: #000066; FONT-FAMILY: Arial,Helvetica; FONT-SIZE: 10pt; FONT-WEIGHT: bold}P {	COLOR: #000066; FONT-FAMILY: Arial,Helvetica; FONT-SIZE: 10pt; FONT-WEIGHT: bold}A {	COLOR: #000066; FONT-FAMILY: Arial,Helvetica; FONT-SIZE: 10pt; FONT-WEIGHT: bold}A:active {	COLOR: #ff0000; FONT-FAMILY: Arial,Helvetica; FONT-SIZE: 10pt; FONT-WEIGHT: bold}.verm {	COLOR: #aa0000; FONT-FAMILY: Arial,Helvetica; FONT-SIZE: 10pt; FONT-WEIGHT: bold}</STYLE></HEAD>
+<BODY bgColor=#ffffcc>
+  <table width="100%" cellspacing=0 cellpadding=0>
+  <tr>
+    <td width=500 bgColor=#000066>
+      <A href="http://www.sbce.com.br"><IMG src="images/logo.gif" border=0></A>
+    </td>
+    <td width="100%">
+      <P align=center><FONT size=4 color=#000066>CRÉDITO CONCEDIDO</FONT></P>
+      <P>&nbsp;</P>
+      <P align=left><FONT size=3 color=#000066>&nbsp;Marisol S/A Ci = 109309</FONT></P>
+    </td>
+  </tr>
+  <tr valign=top>
+    <td bgColor=#000066>
+      <table cellspacing=0 cellpadding=9>
+        <tr><td><a href=""><font size=3 color=#ffffff>Consulta de Clientes</font></a></td></tr>
+        <tr><td><a href=""><font size=3 color=#ffffff>Consulta de Processos</font></a></td></tr>
+        <tr><td><a href=""><font size=3 color=#ffffff>Caixa de Entrada</font></a></td></tr>
+        <tr><td><a href=""><font size=3 color=#ffffff>Sair</font></a></td></tr>
+      </table>
+    </td>
+    <td>
+      <TABLE width="100%" cellspacing=0 cellpadding=0>
+        <TR bgcolor=#cccccc>
+          <th align=middle><FONT color=#000066 size=3>Cod.Coface</FONT></th>
+          <th align=middle><FONT color=#000066 size=3>Nome</FONT></th>
+          <th align=middle><FONT color=#000066 size=3>Validade a partir de</FONT></th>
+          <th align=middle><FONT color=#000066 size=3>País</FONT></th>
+          <th align=middle><FONT color=#000066 size=3>Crédito Solicitado (U$ mil)</FONT></th>
+          <th align=middle><FONT color=#000066 size=3>Crédito Concedido (U$ mil)</FONT></th>
+          <th align=middle><FONT color=#000066 size=3>Alterar (U$ mil)</FONT></th>
+        </TR>
+        <TR>
+          <td align=middle><FONT color=#000066 size=2>280 194451</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>Invermilko SL</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>09/06/2000</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>Espanha</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>100</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>0</FONT></td>
+          <td align=middle><INPUT alt=nome size=2 name=name 
+            style="WIDTH: 57px; HEIGHT: 22px"></td>
+        </TR>
+        <TR>
+          <TR bgcolor=#eaeab4>
+          <td align=middle><FONT color=#000066 size=2>555 146874</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>Samic S/A</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>01/06/200</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>Venezuela</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>35</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>35</FONT></td>
+          <td align=middle><INPUT alt=nome size=2 name=name 
+            style="WIDTH: 57px; HEIGHT: 22px"></td>
+        </TR>
+        <TR>
+          <td align=middle><FONT color=#000066 size=2>245 765541</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>Indubox CA</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>13/06/2000</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>Venezuela</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>100</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>10</FONT></td>
+          <td align=middle><INPUT alt=nome size=2 name=name 
+            style="WIDTH: 55px; HEIGHT: 22px"></td>
+        </TR>
+      </TABLE>
+      <TABLE width="100%" cellspacing=0 cellpadding=0>
+        <TR>
+          <td align=left>
+            <P>&nbsp;</P>
+            <P><FONT color=#000066 size=3>&nbsp;Manes LTDA Ci =    178543</FONT></P>
+          </td>
+        </TR>
+      </TABLE>
+      <TABLE width="100%" cellspacing=0 cellpadding=0>
+        <TR bgcolor=#cccccc>
+          <th align=middle><FONT color=#000066 size=3>Cod.Coface</FONT></th>
+          <th align=middle><FONT color=#000066 size=3>Nome</FONT></th>
+          <th align=middle><FONT color=#000066 size=3>Validade a partir de</FONT></th>
+          <th align=middle><FONT color=#000066 size=3>País</FONT></th>
+          <th align=middle><FONT color=#000066 size=3>Crédito Solicitado (U$ mil)</FONT></th>
+          <th align=middle><FONT color=#000066 size=3>Crédito Concedido (U$ mil)</FONT></th>
+          <th align=middle><FONT color=#000066 size=3>Alterar (U$ mil)</FONT></th>
+        </TR>
+        <TR>
+          <td align=middle><FONT color=#000066 size=2>280 19441</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>MMoreira LTDA</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>09/06/2000</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>Espanha</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>100</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>0</FONT></td>
+          <td align=middle><INPUT alt=nome size=2 name=name 
+            style="WIDTH: 54px; HEIGHT: 22px"></td>
+        </TR>
+        <TR>
+          <TR bgcolor=#eaeab4>
+          <td align=middle><FONT color=#000066 size=2>555 146874</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>Price &amp; Price</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>01/06/2000</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>Venezuela</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>35</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>35</FONT></td>
+          <td align=middle><INPUT alt=nome size=2 name=name 
+            style="WIDTH: 54px; HEIGHT: 22px"></td>
+        </TR>
+        <TR>
+          <td align=middle><FONT color=#000066 size=2>245 765541</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>Madereras</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>13/06/2000</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>Uruguai</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>35</FONT></td>
+          <td align=middle><FONT color=#000066 size=2>35</FONT></td>
+          <td align=middle><INPUT alt=nome size=2 name=name 
+            style="WIDTH: 55px; HEIGHT: 22px"></td>
+        </TR>
+        <TR>
+          <td align=middle colspan=7><FONT color=red size=3><i><b>Estudo Finalizado &nbsp;&nbsp;<INPUT type="submit" value="Ok" id=submit1 name=submit1></b></i></FONT></td>
+        </TR>  
+      </TABLE>
+    </td>
+  </tr>
+  </table></TABLE> 
+</BODY>
+</HTML>

@@ -1,0 +1,4 @@
+# erros no arquivo extract.pl
+
+- Estava usando 2 campos q nao existem mais no banco: Importer.firstTime e Inform.situationCoface
+- Estava gerando notificacoes duplicadas nas funcoes notification_limit e notification_data

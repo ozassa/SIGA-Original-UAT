@@ -1,0 +1,9 @@
+<?
+$x = odbc_exec($db,
+	       "insert into ImporterRem (idImporter, solicDate, remDate, state) values ($idBuy, getdate(), NULL, 1)");
+if(! $x){
+  $msg = "Problemas ao remover importador";
+}else{
+  $notif->removedImporters($user->id, $db, $idInform, 'remBuy');
+}
+?>

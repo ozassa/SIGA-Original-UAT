@@ -1,0 +1,50 @@
+{
+    "report_only": true,
+    "log_violations": true,
+    "allow_unsafe_inline": true,
+    "allow_unsafe_eval": true,
+    "enable_trusted_types": false,
+    "custom_sources": {
+        "script_src": [
+            "https://ssl.google-analytics.com",
+            "https://www.google-analytics.com",
+            "https://www.googletagmanager.com"
+        ],
+        "style_src": [
+            "https://fonts.googleapis.com"
+        ],
+        "font_src": [
+            "https://fonts.gstatic.com"
+        ],
+        "connect_src": [
+            "https://republicavirtual.com.br",
+            "https://ssl.google-analytics.com",
+            "https://www.google-analytics.com"
+        ],
+        "img_src": [],
+        "frame_src": [],
+        "object_src": []
+    },
+    "notifications": {
+        "email_alerts": false,
+        "admin_email": "admin@example.com",
+        "critical_threshold": 10
+    },
+    "page_specific_policies": {
+        "tinymce_pages": {
+            "pattern": "caixa_texto",
+            "allow_unsafe_inline": true,
+            "allow_unsafe_eval": true,
+            "additional_sources": {
+                "script_src": ["'unsafe-inline'", "'unsafe-eval'"]
+            }
+        },
+        "upload_pages": {
+            "pattern": "upload",
+            "additional_sources": {
+                "img_src": ["blob:"],
+                "object_src": ["blob:"]
+            }
+        }
+    }
+}

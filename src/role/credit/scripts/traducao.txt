@@ -1,0 +1,29 @@
+1 policy identification: identificação da política.
+2 buyer identification:  identificação do importador.
+3 request: pedido.
+4 request on secondary address: pedido no endereço secundário.
+5 guarantor recommended by the policy holder: guarantor recomendada pelo suporte de política(?)
+6 decision: decisão.
+7 decision clause: clasula de decisão.
+8 decision comments: comentários da decisão.
+9 guarantor on the decision: guarantor na decisão (?) 
+10 buyer complement. complemento do comprador.
+11 guarantor complement(1) on decision. guarantor complenetar na decisão.
+12 in spite of our search. Apesar de nossa busca.
+13 information request. Pedido de Informação.
+14 balance sheet request. Requisição do Balanço.
+15 policy broker. Corretor da política. 
+16 guarantor complement(1) on request. Complemento do guarantor (1) no pedido.
+17 guarantor complement(2) on request. Complemento do guarantor (2) no pedido.
+18 guarantor complement(2) on decision. Complemento do guarantor (2) no pedido.
+19 KZU-NZM. KZU-NZN.
+20 decision in the future. Decisão no futuro.
+21 decision clause in the future. Cláusura de decisão no futuro.
+22 decision in the future comments. Decisão nos comentarios futuos.
+23 guarantor on decision in the future. Guarantor na decisão no futuro. 
+24 guarantor complement(1). Complemento do guarantor (1). 
+25 guarantor complement(2). Complemento do guarantor (1). 
+26 rating. Avaliação.
+27 previous address on FO RECTIF. Endereço precedente em FO RECTIF. 
+28 SCRL report. Relatório de SCRL. 
+

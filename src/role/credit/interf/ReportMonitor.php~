@@ -1,0 +1,195 @@
+<?
+// monta a tela com a lista de exportadores
+//Alterado HiCom mes 04
+
+function mkdate ($a, $m, $d) {
+  return date ("Y-m-d", mktime (0, 0, 0, $m, $d, $a));
+}
+
+$mesAtu = date ('m');
+if (!$mes) $mes = $mesAtu;
+$m = ($mes - 3) % 12;
+$m = $m + 1;
+
+$anoAtu = date('Y');
+if (!$ano) $ano = $anoAtu;
+$a = $ano;
+
+// comentario pra Andrea entender:
+// verifica se ja teve fechamento do mes
+$cur = odbc_exec($db, "SELECT id FROM ExporterReport WHERE month=$mes AND year=$ano");
+$generated = odbc_fetch_row($cur);
+
+$dInicio = mkdate ($a, $m, 1);
+$dFim = mkdate ($a, $m + 1, 0);
+
+$last = mkdate ($ano, $mes + 1, 1);
+
+$meses = "(startValidity >= '$dInicio' AND startValidity <= '$dFim')";
+for ($i = 1; $i < 4; $i++) {
+  $m = ($m + 2) % 12;
+  $m ++;
+
+  $a = $m > $mes ? $ano -1 : $ano;
+
+  $dInicio = mkdate ($a, $m, 1);
+  $dFim = mkdate ($a, $m + 1, 0);
+
+  $meses .= "\n  OR (startValidity >= '$dInicio' AND startValidity <= '$dFim')";
+}
+
+$query = "";
+if($generated){ //|| ($mes != $mesAtu)) {
+  // se fechou o mes
+  $query = "
+  SELECT inf.name, startValidity, sum(analyse) AS analysis, txAnalyse AS txAnalize,
+         sum (monitor) AS monitor, er.txMonitor, inf.id AS idInform
+  FROM ExporterReport er
+    JOIN ImporterReport ir ON idExporterReport = er.id
+    JOIN Inform inf ON idInform = inf.id
+  WHERE month = $mes AND year = $ano
+  GROUP BY inf.name, startValidity, txAnalyse, er.txMonitor, inf.id
+  HAVING (sum(analyse) <> 0 ) OR (sum (monitor) <> 0)
+  ORDER BY inf.name
+  ";
+}else{ // nao fechou o mes
+  $query = "
+  SELECT inf.name, startValidity, sum (analysis) AS analysis, txAnalize,
+         sum (monitor) AS monitor, txMonitor, inf.id AS idInform
+  FROM Inform inf
+    JOIN Importer imp ON imp.idInform = inf.id
+    JOIN ChangeCredit cc ON cc.idImporter = imp.id
+  WHERE
+    (inf.state = 10 OR inf.state = 11) AND
+    ($meses) AND
+    cc.id in (
+      SELECT MAX (id)
+      FROM ChangeCredit
+      WHERE (stateDate <= '$last')
+            AND (state = 2 OR state = 4 OR state = 5 OR state = 6 OR state = 7)
+      GROUP BY idImporter
+    ) AND (imp.c_Coface_Imp IS NOT NULL) AND (RTRIM(LTRIM(imp.c_Coface_Imp)) 
+                      <> '0') AND (RTRIM(LTRIM(imp.c_Coface_Imp)) <> '')
+  GROUP BY inf.name, startValidity, txAnalize, txMonitor, inf.id
+  HAVING (SUM (analysis) <> 0) OR (SUM (monitor) <> 0)
+  ORDER BY inf.name
+  ";
+  
+  echo $query;
+  //die();
+  
+}
+
+//echo "<pre>$query</pre>";
+$cur = odbc_exec ($db, $query);
+?>
+<form action="<?= $root ?>role/credit/Credit.php">
+<input name=comm value="resMonitor" type=hidden>
+<table align=center border="0" cellpadding="2" cellspacing="0" width="100%">
+<tr class="bgCinza">
+  <th class="textoBold">Mês</th>
+  <td>
+    <select name=mes class="caixa">
+<?
+for ($i = 1; $i <= 12; $i++) {
+?>
+  <option<?= $i == $mes ? ' SELECTED' : '' ?>><?= $i ?></option>
+<?
+}
+?>
+</select>
+  </td>
+  <th class="textoBold">Ano</th>
+  <td>
+    <select name=ano class="caixa">
+      <option<?= $ano == $anoAtu ? ' SELECTED' : '' ?>><?= $anoAtu ?></option>
+      <option<?= $ano == ($anoAtu - 1) ? ' SELECTED' : '' ?>><?= $anoAtu - 1 ?></option>
+    </select>
+  </td>
+</tr>
+<tr class="bgCinza">
+  <th colspan="4" class="bgCinza"><input type=submit value="Consultar" class="servicos"></th>
+</tr>
+</table>
+</form>
+
+<table width=100% cellspacing=0 cellpadding=2 border="0" align="center">
+<tr class="bgAzul"><th align=left class="bgAzul">Segurado</th><!--<th>Proposta</th>--><th class="bgAzul">Qtde. Análises</th><th class="bgAzul">Análises</th><th class="bgAzul">Qtde. Monitor.</th><th class="bgAzul">Monitoramento</th><th>Total</th></tr>
+<?
+$count = 0;
+$nAnT = 0;
+$nAmT = 0;
+$analiseT = 0;
+$monitorT = 0;
+$totalT = 0;
+while (odbc_fetch_row ($cur)) {
+  $data = odbc_result ($cur, 'startValidity');
+  $data = substr($data,8,2)."/".substr($data,5,2)."/".substr($data,0,4);
+  $nome = trim(odbc_result ($cur, 'name'));
+  $nAn  = odbc_result ($cur, 'analysis');
+  $nAnT += $nAn;
+  $nAm  = odbc_result ($cur, 'monitor');
+  $nAmT += $nAm;
+  $txA  = odbc_result ($cur, 'txAnalize');
+  $txM  = odbc_result ($cur, 'txMonitor');
+  $analise = number_format ($nAn * $txA,2,",",".");
+  $analiseT += $nAn * $txA;
+  $monitor = number_format ($nAm * $txM / 4,2,",",".");
+  $monitorT += $nAm * $txM / 4;
+  $total   = number_format ($nAn * $txA + $nAm * $txM/ 4,2,",",".");
+  $totalT += $nAn * $txA + $nAm * $txM/ 4;
+  $idInform = odbc_result ($cur, 'idInform');
+?>
+<tr <?= ($count % 2) ? "" : " bgcolor=#e9e9e9" ?>>
+  <td class="texto"><a href="<?= $root ?>role/credit/Credit.php?comm=reportImporter&anoMes=<?= $ano.'-'.$mes ?>&idInform=<?= $idInform ?>&origem=1"><?= $nome ?></a></td>
+  <!--<td>&nbsp;</td>-->
+  <td class="texto" align=center><?= $nAn ?></td>
+  <td class="texto" align=center><?= $analise ?></td>
+  <td class="texto" align=center><?= $nAm ?></td>
+  <td class="texto" align=center><?= $monitor ?></td>
+  <td class="texto" align=center><?= $total ?></td>
+</tr>
+<?
+  $count++;
+}
+if ($count == 0) {
+?>
+<tr>
+  <th colspan=6 align=center class="textoBold" bgcolor="#a4a4a4">Nenhuma Cobrança</th>
+</tr>
+<?
+   } else {
+?>
+<tr bgcolor=#cccccc>
+  <th class="textoBold">Totais</th>
+  <!--<td>&nbsp;</td>-->
+  <td class="textoBold"	align=center><?= $nAnT ?></td>
+  <td class="textoBold"	align=center><?= number_format ($analiseT,2,',','.') ?></td>
+  <td class="textoBold"	align=center><?= $nAmT ?></td>
+  <td class="textoBold"	align=center><?= number_format ($monitorT,2,',','.') ?></td>
+  <td class="textoBold"	align=center><?= number_format ($totalT,2,',','.') ?></td>
+</tr>
+<?
+  }
+?>
+</table>
+<?
+  $day = date ('d');
+  if (!$generated &&
+      (($mes == $mesAtu && $ano == $anoAtu && $day >= 25)
+       || ($mes < $mesAtu && $ano == $anoAtu)
+       || ($ano < $anoAtu))) {
+?>
+<form action="<?= $root ?>role/credit/Credit.php" onSubmit="return confirm('Confirmar cobrança?')">
+<input type=hidden name=comm value="setCobr">
+<input type=hidden name=mes value="<?= $mes ?>">
+<input type=hidden name=ano value="<?= $ano ?>">
+
+<div align=center>
+<p><input type=submit value="Enviar Cobrança" class="servicos"></p>
+</div>
+</form>
+<p>
+<?
+  }
+?>

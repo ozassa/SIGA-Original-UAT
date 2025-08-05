@@ -1,0 +1,88 @@
+<HTML>
+<HEAD>
+<TITLE></TITLE><STYLE type=text/css>TD {COLOR: #000066; FONT-FAMILY: Arial,Helvetica; FONT-SIZE: 10pt; FONT-WEIGHT: bold}
+BODY {COLOR: #000066; FONT-FAMILY: Arial,Helvetica; FONT-SIZE: 10pt; FONT-WEIGHT: bold}
+P {COLOR: #000066; FONT-FAMILY: Arial,Helvetica; FONT-SIZE: 10pt; FONT-WEIGHT: bold}
+A {COLOR: #000066; FONT-FAMILY: Arial,Helvetica; FONT-SIZE: 10pt; FONT-WEIGHT: bold}
+A:active {COLOR: #ff0000; FONT-FAMILY: Arial,Helvetica; FONT-SIZE: 10pt; FONT-WEIGHT: bold}
+.verm {COLOR: #aa0000; FONT-FAMILY: Arial,Helvetica; FONT-SIZE: 10pt; FONT-WEIGHT: bold}
+</STYLE>
+</HEAD>
+<body bgColor=#ffffcc leftMargin="0" topMargin="0" marginheight="0" marginwidth="0">
+	<form action="<?php echo $root ?>role/client/Client.php" method=post>
+        <input type=hidden name=comm value=alterCreditImporter>
+
+    <FONT size=2 color=#000066><?php echo $nameCl?> Ci Coface = <?php  echo $contrat?></font>
+ <TABLE width=100% cellspacing=0 cellpadding=0>
+        <TR bgcolor=#cccccc>
+          <th align=center><FONT color=#000066 size=2>Importador</font></th>
+          <th align=center><FONT color=#000066 size=2>País/Ci<br>Coface</font></th>
+          <th align=center><FONT color=#000066 size=2>Data do<br>Estudo</font></th>
+          <th align=center><FONT color=#000066 size=2>Crédito<br>Solicitado</font></th>
+          <th align=center><FONT color=#000066 size=2>Crédito<br>Concedido</font></th>
+          <th align=center><FONT color=#000066 size=2>Solicitar</font></th>
+        </TR>
+
+
+<?php
+        $i = 0;
+	while(odbc_fetch_row($cur)){       
+		$importerName        = odbc_result($cur, 2);
+		$importerCoface      = odbc_result($cur, 3); 
+		$importerCredit      = odbc_result($cur, 4); 
+		$importerCountry     = odbc_result($cur, 5); 
+		$changeCredit        = odbc_result($cur, 6); 
+       		$changeDate          = odbc_result($cur, 7); 
+		$importerId          = odbc_result($cur, 8); 
+
+
+
+		if($importerId = $id){
+			$list[$i][importerName] = $importerName;
+			$list[$i][importerCoface] = $importerCoface;
+			$list[$i][importerCredit] = $importerCredit;
+			$list[$i][importerCountry] = $importerCountry;
+			$list[$i][changeCredit] = $changeCedit;
+			$list[$i][changeDate] = $changeDate;
+			$list[$i][importerId] = $importerId;
+			$i++; 
+		}
+
+	     	$importerCredit  = number_format($importerCredit, 2, ",", ".");
+	     	$changeCredit    = number_format($changeCredit, 2, ",", ".");
+	
+		$changeDate  = substr($changeDate, 8, 2)."/".substr($changeDate, 5, 2)."/".substr($changeDate, 0, 4);
+		$id = $importerId;
+
+	}
+?>
+
+<?php  $j = 0;
+	while($j <= $i){
+	
+?>
+
+	<tr align=center <?php  echo $j % 2 ? "bgcolor=#eaeab4" : "" ?>> 
+          <th align=center><FONT color=#000066 size=2><?php  echo $list[$j][importerName]?></font></th>
+          <th align=center><FONT color=#000066 size=2><?php  echo $list[$j][importerCountry]?>/
+		<?php  echo $list[$j][importerCoface]?></font></th>
+          <th align=center><FONT color=#000066 size=2><?php  echo $list[$j][changeDate]?></font></th>
+          <th align=center><FONT color=#000066 size=2><?php  echo $list[$j][importerCredit]?></font></th>
+          <th align=center><FONT color=#000066 size=2><?php  echo $list[$j][changeCredit]?></font></th>
+          <th align=center><FONT color=#000066 size=2><INPUT type=text size=10 name=<?php  echo "edit".$i?></font></th>
+	  <input type=hidden name=<?php  echo "importer".$j?> value=<?php  echo $list[$j][importerId]?>>
+	  <input type=hidden name=inform value=<=?$informId?>>
+        </TR>
+       
+<?php  $j++;
+	}
+
+?>
+	</table>
+	   <input type=button onClick="this.form.comm.value='open';this.form.submit()" value="Voltar"> 
+	   <input type=button onClick="this.form.comm.value='alterCreditImporter';this.form.submit()" value="Voltar"> 
+          <p align=center></FONT></p>
+        </TR>
+        </TR>
+</BODY>
+</HTML>        

@@ -1,0 +1,57 @@
+<TABLE border="0" cellSpacing=0 cellpadding="5" width="98%" align="center">
+  <TR>
+    <TD colspan="3" class="bgCinza" align="center">Endosso -  Exportadores sem Parcela de Ajuste</TD>
+  </TR>
+   <TR>
+    <TD colspan="3">&nbsp;</TD>
+  </TR>
+  <TR class="bgAzul">
+    <td width="5%">&nbsp;</td>
+    <td>Razão Social</td>
+    <td width="15%">&nbsp;</td>
+  </TR>
+
+<?php $query = "select i.name, i.id, e.id
+          from Inform i left join Endosso e on e.idInform=i.id
+          where i.state = 11 and i.codProd = 1 and i.id not in
+          (select idInform from Endosso
+           where tipo = 3)";
+// $query = "select name, id from Inform
+//           where state = 11 and id not in
+//           (select idInform from Endosso
+//            where tipo = 3)";
+echo "$query";
+$cur = odbc_exec($db, $query);
+$i = 0;
+while (odbc_fetch_row($cur)) {
+  $i++;
+  $name = odbc_result($cur, 1);
+  $idInform = odbc_result($cur, 2); 
+  $idEndosso = odbc_result($cur, 3);
+  echo "<tr ". ((($i % 2) != 0) ? " bgcolor=\"#e9e9e9\"" : ""). ">".
+    "<td width=\"5%\">$i</td>".
+    "<td>$name</td>";
+?>
+<td>
+<form action="<?php echo $root;?>role/endosso/Endosso.php" method=post>
+<input type=hidden name=comm value="geraPA">
+<input type=hidden name=idInform value="<?php echo $idInform;?>">
+<input type=hidden name=idEndosso value="<?php echo $idEndosso;?>">
+<input type=submit class=sair value="Gerar parcela de ajuste">
+</form>
+</td>
+<?php echo "</tr>";
+} // while
+
+if ($i == 0) {
+?>
+  <TR class="bgCinza">
+    <TD align="center" colspan=2 class="bgCinza">Nenhum Exportador Cadastrado</TD>
+  </TR>
+
+<?php } // if
+?>
+   <TR>
+    <TD colspan="2">&nbsp;</TD>
+  </TR>
+</TABLE>

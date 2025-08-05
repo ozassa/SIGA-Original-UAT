@@ -1,0 +1,208 @@
+<div align="center">
+<script language="JavaScript" src="<?= $root ?>scripts/utils.js"></script>
+
+<?
+  $cur=odbc_exec(
+    $db,
+    "SELECT  id, respName, ocupation, bornDate, prMin, txMin, txRise, idRegion, numParc,
+      periodMaxCred, currency, limPagIndeniz, validCot, txAnalize, currencyAnalize,
+      txMonitor, currencyMonitor, prodUnit, percCoverage, sentOffer, tarifDate, warantyInterest
+     FROM Inform WHERE id = $idInform"
+  );
+  if (odbc_fetch_row($cur)) {
+    $date = odbc_result($cur,4);
+    $limPagIndeniz = odbc_result($cur, 'limPagIndeniz');
+    $cobertura = odbc_result($cur, 'percCoverage');
+    $tarifDate = odbc_result($cur,21);
+    $tarifDate = substr($tarifDate,8,2)."/".substr($tarifDate,5,2)."/".substr($tarifDate,0,4);
+    $field->setDB ($cur);
+    $numParc=$field->getDBField("numParc", 9);
+    //echo "Número de parcelas [".$numParc."]";
+    //echo "<br>".($field->getDBField ("warantyInterest",22) == 1 ? 1.04 : 1)."<br>";
+
+?>
+<table cellspacing=2 cellspacing="0" width="100%" align="center">
+<tr><td class="textoBold" width="30%">Nome do Responsável:</td><td class="texto" width="70%"><?= odbc_result($cur,2) ?></td></tr>
+<tr><td class="textoBold">Cargo:</td><td class="texto"><?= odbc_result($cur,3) ?></td></tr>
+<tr><td class="textoBold">Data de Cadastro:</td><td class="texto"><?= substr($date,8,2)."/".substr($date,5,2)."/".substr($date,0,4) ?></td></tr>
+<tr><td class="textoBold">Data de Tarifação:</td><td class="texto"><?= $tarifDate ?></td></tr>
+<tr><td class="textoBold">Email para enviar Oferta/Proposta:</td><td class="texto"><?= $email ?></td></tr>
+</table>
+
+<script>
+function calc (form) {
+  form.prDisplay.value = <?= $field->getDBField ("prMin", 5) * ($field->getDBField ("warantyInterest",22) == 1 ? 1.04 : 1) ?> * (1 + (numVal(form.txRise.value)/100));
+  checkDecimals (form.prDisplay, dot2comma(form.prDisplay.value));
+  form.txDisplay.value = <?= $field->getDBField ("txMin", 6) ?> * (1 + (numVal(form.txRise.value)/100)) * 100;
+  checkDecimals (form.txDisplay, dot2comma(form.txDisplay.value));
+}
+
+function consist (form) {
+  msg = "";
+  if (form.numParc[0].checked) {
+    numParc=1;
+  } else if (form.numParc[1].checked) {
+    numParc=2;
+  } else if (form.numParc[2].checked) {
+    numParc=4;
+  } else if (form.numParc[3].checked) {
+    numParc=7;
+  } else if (form.numParc[4].checked) {
+    numParc=10;
+  }
+
+  if (
+    numParc > 1 &&
+    numVal(form.prDisplay.value) / numParc < 1000
+  ) {
+    msg += "Valor da parcela abaixo de US$ 1.000,00";
+  }
+ if (form.txAnalize.value == '0,00'){
+   alert("Informe um valor para a Taxa de Análise e Monitoramento");
+   form.txAnalize.focus();
+   return (false);
+ }
+  if (msg != "") {
+    alert ("Favor corrigir o número de parcelas:\n"+ msg);
+  } else {
+        if (confirm ("Confirma o valor de Análise e Monitoramento = R$ " + form.txAnalize.value +  "?")) 
+   	   form.submit(); 
+  }
+  }
+</script>
+
+<form action="<?= $root ?>role/executive/Executive.php" method=post name=f>
+<input type=hidden name="comm" value="sendOffer">
+<input type=hidden name="idInform" value="<?= $idInform ?>">
+<input type=hidden name="idNotification" value="<?= $idNotification ?>">
+<input type=hidden name="idRegion" value="<?= $field->getDBField('idRegion', 8) ?>">
+
+<TABLE WIDTH="100%" cellspacing=0 cellpadding="2" align="center" border="0">
+  <TR class="bgCinza">
+    <td class="bgCinza" align="center">&nbsp;</td>
+    <td class="bgCinza" align="center">Valores</td>
+    <td class="bgCinza" align="center">Aumentar</td>
+    <td class="bgCinza" align="center">Novo Valor</td> 
+  </TR>
+  <TR>
+    <td class="textoBold">Prêmio Mínimo:</td>
+<?
+$premio_minimo = odbc_result($cur, 5) * ($field->getDBField("warantyInterest", 22) == 1 ? 1.04 : 1);
+?>
+    <td align=center class="texto"><?= number_format ($premio_minimo, 2, ",", ".") ?></td> 
+    <td align=center rowspan=2><INPUT class="caixa" size=5 onFocus="select()" name="txRise" value="<?= number_format(100 * odbc_result($cur, 7), 2, ',', '.') ?>" onBlur="checkDecimals(this, this.value); calc(this.form)">%</td>
+    <td align=center><input class="caixa" name="prDisplay" onFocus="blur()" value="<?= number_format((odbc_result($cur, 5) * ($field->getDBField('warantyInterest', 22) == 1 ? 1.04 : 1) * (1 + odbc_result($cur, 7))), 2, ',', '.') ?>"></td>
+  </TR>
+  <TR>
+    <td class="textoBold">Taxa Mínima:</td>
+    <td align=center class="texto"><?= number_format(100 * odbc_result($cur, 6), 2, ",", ".") ?>%</td> 
+    <td align=center>&nbsp;&nbsp;<input class="caixa" name="txDisplay" onFocus="blur()" value="<?= number_format ((100 * odbc_result($cur, 6) * (1 + odbc_result($cur, 7))),2,",",".") ?>">%</td>
+  </TR>
+  <TR>
+    <th colspan = 4>&nbsp;</th>
+  </TR>
+  <TR class="bgCinza">
+    <th colspan="4" class="bgCinza">Parâmetros da Proposta</th>
+  </TR>
+  <TR>
+    <th colspan = 4>&nbsp;</th>
+  </TR>
+</TABLE> 
+
+<table width="100%" align="center" cellpadding="2" cellspacing=0 border=0>
+<tr>
+<td width=100% colspan=4>
+<table width="100%">
+<tr>
+<td align=center class="texto">
+  <input type="radio" name = "numParc" value="1" checked><br> À vista
+</td>
+
+<td align=center class="texto">
+<input type="radio" name = "numParc" value="2"<?= $numParc == 2 ? " checked" : "" ?>>02 Parcelas <br> À vista/90 dias</td>
+</td>
+
+<td align=center class="texto">
+<input type="radio" name = "numParc" value="4"<?= $numParc == 4 ? " checked" : "" ?>>04 Parcelas <br> À vista/90/180/270 dias</td>
+
+<td align=center class="texto">
+<input type="radio" name = "numParc" value="7"<?= $numParc == 7 ? " checked" : "" ?>>07 Parcelas <br> mensais</td>
+
+
+<!--
+<td align=center class="texto">
+<input type="radio" name = "numParc" value="6"<?= $numParc == 6 ? " checked" : "" ?>>06 Parcelas <br> À vista/60/120/180/240/300 dias</td>
+
+
+<td align=center class="texto">
+<input type="radio" name = "numParc" value="10"<?= $numParc == 10 ? " checked" : "" ?>>10 Parcelas <br> À vista e demais parcelas <br> a cada 30 dias</td>
+-->
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td class="textoBold">Duração de Crédito:</td><td class="texto"><input type=hidden name=periodMaxCred value="180">180</td>
+  <td class="textoBold">Vencimento da 1ª parcela:</td><td class="texto"><select name=vencFirst>
+<?
+$dia = date('d');
+$mes = date('m');
+$ano = date('Y');
+    for($j = $dia + 1; $j <= $dia + 15; $j++){
+      $tmp = date('d/m/Y', mktime(0, 0, 0, $mes, $j, $ano));
+      echo "<option value=\"$tmp\"> $tmp\n";
+    }
+?>
+</select></td>
+</tr>
+<tr>
+  <td class="textoBold">Moeda:</td><td class="texto"><input class="caixa" type=hidden name=currency value="<?= $field->getDBField('currency', 11) ?>">Dolar Norte Americano</td>
+  <td class="textoBold">Lim. Máx Pag. Indeniz.:</td><td class="texto"><input class="caixa" name=limPagIndeniz value=<?= $limPagIndeniz ? $limPagIndeniz : '30' ?> onFocus="blur()"></td>
+</tr>
+<tr>
+  <td class="textoBold">Taxa de Análise<br>e Monitoramento:</td><td><input class="caixa" name=txAnalize onBlur="checkDecimals(this, this.value)" value="<?= number_format($field->getDBField('txAnalize', 14), 2, ',', '.') ?>"></td>
+  <td class="textoBold">Cobertura:</td><td><input class="caixa" name=percCoverage value="<?= number_format($cobertura ? $cobertura : 85, 0, '', '') ?>" onFocus="blur()" size=4>%</td>
+</tr>
+<tr>
+  <td colspan="2"><!--<FONT size=2 color="#000066">Taxa de Monitoramento:</font></td><td><input name=txMonitor onBlur="checkDecimals(this, this.value)" value="<?= number_format($field->getDBField('txMonitor', 16), 2, ',', '.') ?>">-->&nbsp;</td>
+  <td class="textoBold">Unidade de Produção:</td>
+  <td>
+    <SELECT name=prodUnit class="caixa">
+	<option value="62"<?= $field->getDBField("prodUnit", 18) == 62 ? " selected" : "" ?>>Matriz-062</option>
+        <option value="202"<?= $field->getDBField("prodUnit", 18) == 202 ? " selected" : "" ?>>Filial SP-202</option>
+        <option value="204"<?= $field->getDBField("prodUnit", 18) == 204 ? " selected" : "" ?>>Filial RS-204</option>
+    </SELECT>
+  </td>
+</tr>
+<tr>
+  <td class="textoBold">Validade da Cotação:</td><td colspan=3 class="texto"><input class="caixa" name=validCot value="<?= $field->getDBField('validCot', 13) ?>">&nbsp;dias</td>
+</tr>
+</table>
+<br>
+<input class="servicos" type=hidden name=currencyAnalize value="<?= $field->getDBField('currencyAnalize', 15) ?>">
+<input class="servicos" type=hidden name=currencyMonitor value="<?= $field->getDBField('currencyMonitor', 17) ?>">
+<? if ($msg != "") {?><p><font color="red"><?= $msg ?></font></p><? } ?>
+<input class="servicos" type=button value="Voltar" onClick="this.form.comm.value='notif';this.form.submit()">
+<input class="servicos" type=button value="Cancelar" onClick="this.form.comm.value='cancelInf';this.form.submit()">
+<INPUT class="servicos" type=button value="Retarifação" onClick="this.form.comm.value='retarifar'; this.form.submit()">
+<br>
+<? if (odbc_result($cur, 20) != 0 || $idAnt)  { ?>
+<INPUT class="servicos" type=button value="Enviar Nova Oferta" onClick="this.form.comm.value='sendOffer';consist(this.form)">
+<input class="servicos" type=button value="Enviar Proposta" onClick="this.form.comm.value='viewProp';consist(this.form)">
+<? } else { ?>
+<INPUT class="servicos" type=button value="Enviar Oferta" onClick="this.form.comm.value='sendOffer';consist(this.form);">
+<? } ?>
+<INPUT class="servicos" type=button value="Reestudo" onClick="this.form.comm.value='devolve';this.form.submit();">
+</P>
+</form>
+<?
+  } else {
+?>
+<p class="verm">Inform inválido</p>
+<?
+  }
+?>
+</div>
