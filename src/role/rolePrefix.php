@@ -139,9 +139,15 @@ if (!function_exists('esta_vigente')) {
 
         // Prepara a primeira consulta
         $stmt = odbc_prepare($db, "SELECT idAnt, state FROM Inform WHERE id = ?");
-        odbc_execute($stmt, [$idInform]);
+        if (!$stmt) {
+            return 0;
+        }
+        
+        if (!odbc_execute($stmt, [$idInform])) {
+            return 0;
+        }
+        
         $result = odbc_fetch_array($stmt);
-
         if (!$result) {
             return 0;
         }
@@ -152,9 +158,15 @@ if (!function_exists('esta_vigente')) {
         if ($idAnt) {
             // Prepara a segunda consulta
             $stmtAnt = odbc_prepare($db, "SELECT state FROM Inform WHERE id = ?");
-            odbc_execute($stmtAnt, [$idAnt]);
+            if (!$stmtAnt) {
+                return 0;
+            }
+            
+            if (!odbc_execute($stmtAnt, [$idAnt])) {
+                return 0;
+            }
+            
             $resultAnt = odbc_fetch_array($stmtAnt);
-
             if (!$resultAnt) {
                 return 0;
             }
@@ -213,9 +225,15 @@ if (!function_exists('esta_em_renovacao')) {
 
         // Prepara a consulta para obter o estado atual
         $stmt = odbc_prepare($db, "SELECT state FROM Inform WHERE id = ?");
-        odbc_execute($stmt, [$idInform]);
+        if (!$stmt) {
+            return 0;
+        }
+        
+        if (!odbc_execute($stmt, [$idInform])) {
+            return 0;
+        }
+        
         $result = odbc_fetch_array($stmt);
-
         if (!$result) {
             return 0;
         }
@@ -224,7 +242,14 @@ if (!function_exists('esta_em_renovacao')) {
 
         // Prepara a consulta para obter o estado do informe anterior
         $stmtAnt = odbc_prepare($db, "SELECT state FROM Inform WHERE idAnt = ?");
-        odbc_execute($stmtAnt, [$idInform]);
+        if (!$stmtAnt) {
+            return 0;
+        }
+        
+        if (!odbc_execute($stmtAnt, [$idInform])) {
+            return 0;
+        }
+        
         $resultAnt = odbc_fetch_array($stmtAnt);
 
         if ($resultAnt) {
@@ -284,9 +309,15 @@ if (!function_exists('HC_renovando')) {
 
         // Prepara a consulta para obter o estado e o ID anterior
         $stmt = odbc_prepare($db, "SELECT state, idAnt FROM Inform WHERE id = ?");
-        odbc_execute($stmt, [$idInform]);
+        if (!$stmt) {
+            return 0;
+        }
+        
+        if (!odbc_execute($stmt, [$idInform])) {
+            return 0;
+        }
+        
         $result = odbc_fetch_array($stmt);
-
         if (!$result) {
             return 0;
         }
@@ -297,7 +328,14 @@ if (!function_exists('HC_renovando')) {
         if ($HC_idAnt) {
             // Prepara a consulta para obter o estado do informe anterior
             $stmtAnt = odbc_prepare($db, "SELECT state FROM Inform WHERE id = ?");
-            odbc_execute($stmtAnt, [$HC_idAnt]);
+            if (!$stmtAnt) {
+                return 0;
+            }
+            
+            if (!odbc_execute($stmtAnt, [$HC_idAnt])) {
+                return 0;
+            }
+            
             $resultAnt = odbc_fetch_array($stmtAnt);
 
             if ($resultAnt) {

@@ -51,7 +51,13 @@ class Notification
   {
     $sql = "SELECT notification, id FROM NotificationR WHERE notification = ? AND state = 1";
     $cur = odbc_prepare($db, $sql);
-    odbc_execute($cur, [$notification]);
+    if (!$cur) {
+      return false;
+    }
+    
+    if (!odbc_execute($cur, [$notification])) {
+      return false;
+    }
 
     if (odbc_fetch_row($cur)) {
       $id = odbc_result($cur, 'id');

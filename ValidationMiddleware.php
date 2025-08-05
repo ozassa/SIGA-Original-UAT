@@ -159,7 +159,7 @@ class ValidationMiddleware {
             '/\'\s*(or|and)\s*\'/i',
             
             // Command injection patterns
-            '/[;&|`$(){}[\]]/i',
+            '/[;&|`$(){}\\[\\]]/i',
             '/\b(wget|curl|nc|netcat|php|python|perl|ruby|bash|sh|cmd|powershell)\b/i',
             
             // Path traversal patterns

@@ -34,7 +34,13 @@ class User {
    }
    
    $cur = odbc_prepare($db, $qry);
-   if (!$cur || !odbc_execute($cur, [$u, $p, $per])) {
+   if (!$cur) {
+     error_log("Failed to prepare login query - User: $u, IP: " . $_SERVER['REMOTE_ADDR']);
+     $this->user = NULL;
+     return;
+   }
+   
+   if (!odbc_execute($cur, [$u, $p, $per])) {
      // Log da tentativa de acesso inválida
      error_log("Tentativa de login falhada - User: $u, IP: " . $_SERVER['REMOTE_ADDR']);
      $this->user = NULL;
@@ -58,17 +64,21 @@ class User {
                       AND u.id = ?
                 ORDER BY inf.id DESC";
       $curEmail = odbc_prepare($db, $cSql);
-      if ($curEmail && odbc_execute($curEmail, [$idUser]) && odbc_fetch_row($curEmail)) {
-         $emailUser = odbc_result($curEmail, 1);
+      if ($curEmail) {
+        if (odbc_execute($curEmail, [$idUser]) && odbc_fetch_row($curEmail)) {
+          $emailUser = odbc_result($curEmail, 1);
+        }
       }
       
       // carregar os papeis - query parametrizada
       $roleQuery = "SELECT name FROM UserRole AS ur JOIN Role AS r ON (ur.idRole = r.id) WHERE ur.idUser = ?";
       $curRole = odbc_prepare($db, $roleQuery);
-      if ($curRole && odbc_execute($curRole, [$idUser])) {
-        while (odbc_fetch_row($curRole)) {
-          $roleName = odbc_result($curRole, 1);
-          $role[$roleName] = $roleName;
+      if ($curRole) {
+        if (odbc_execute($curRole, [$idUser])) {
+          while (odbc_fetch_row($curRole)) {
+            $roleName = odbc_result($curRole, 1);
+            $role[$roleName] = $roleName;
+          }
         }
       }
       $this->user = new UserView($idUser, $nameUser, $role, $emailUser, $per);
@@ -81,7 +91,13 @@ class User {
       $per="CO";
       // Tentativa com perfil CO - query parametrizada
       $curCO = odbc_prepare($db, "SELECT id, login FROM Users WHERE login = ? AND password = ? AND isnull(state,0) <> 1 AND perfil = ?");
-      if (!$curCO || !odbc_execute($curCO, [$u, $p, $per])){
+      if (!$curCO) {
+        error_log("Failed to prepare CO query - User: $u, IP: " . $_SERVER['REMOTE_ADDR']);
+        $this->user = NULL;
+        return;
+      }
+      
+      if (!odbc_execute($curCO, [$u, $p, $per])) {
         error_log("Erro na query CO - User: $u, IP: " . $_SERVER['REMOTE_ADDR']);
         $this->user = NULL;
         return;
@@ -93,10 +109,12 @@ class User {
             // carregar os papeis - query parametrizada
       $roleQueryCO = "SELECT name FROM UserRole AS ur JOIN Role AS r ON (ur.idRole = r.id) WHERE ur.idUser = ?";
       $curRoleCO = odbc_prepare($db, $roleQueryCO);
-      if ($curRoleCO && odbc_execute($curRoleCO, [$idUser])) {
-        while (odbc_fetch_row($curRoleCO)) {
-          $roleName = odbc_result($curRoleCO, 1);
-          $role[$roleName] = $roleName;
+      if ($curRoleCO) {
+        if (odbc_execute($curRoleCO, [$idUser])) {
+          while (odbc_fetch_row($curRoleCO)) {
+            $roleName = odbc_result($curRoleCO, 1);
+            $role[$roleName] = $roleName;
+          }
         }
       }
 

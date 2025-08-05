@@ -7,8 +7,8 @@
 require_once('advanced_security_system.php');
 
 // Initialize advanced security system
-// Start in Report-Only mode for testing - change to false for enforcement
-$REPORT_ONLY_MODE = true;
+// Production mode - CSP enforcement enabled
+$REPORT_ONLY_MODE = false;
 
 // Check browser compatibility and apply appropriate security
 if (browser_supports_csp()) {

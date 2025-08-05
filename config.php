@@ -10,50 +10,39 @@
 session_start();
   }
    
-  // TEMPORÁRIO: Mostrar erros para debug até resolver problemas
-  error_reporting(E_ALL);
-  ini_set('display_errors', 1);
-  ini_set('display_startup_errors', 1);
-  ini_set('log_errors', 1);
+  // Production error handling - log errors but don't display them
+  $is_production = true; // Set to production mode
   
-  // Função de tratamento seguro de erros
+  error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT);
+  ini_set('display_errors', 0);
+  ini_set('display_startup_errors', 0);
+  ini_set('log_errors', 1);
+  ini_set('error_log', dirname(__FILE__) . '/logs/php_errors.log');
+  
+  // Secure error handler for production
   function secure_error_handler($errno, $errstr, $errfile, $errline) {
-    // Não expor informações sensíveis em produção
-    global $is_production;
-    
-    $error_message = "Erro interno do sistema";
     $log_message = "Error [$errno]: $errstr in $errfile on line $errline";
-    
-    // Log do erro completo
     error_log($log_message);
     
-    if (!$is_production) {
-        echo "<div style='color: red; font-weight: bold;'>$log_message</div>";
-    } else {
-        echo "<div style='color: red; font-weight: bold;'>$error_message</div>";
-    }
-    
+    // Don't expose sensitive information in production
     return true;
   }
   
-  // Função de tratamento seguro de exceções
+  // Secure exception handler for production
   function secure_exception_handler($exception) {
-    global $is_production;
-    
-    $error_message = "Erro interno do sistema";
     $log_message = "Uncaught exception: " . $exception->getMessage() . " in " . $exception->getFile() . " on line " . $exception->getLine();
-    
-    // Log da exceção completa
     error_log($log_message);
     error_log($exception->getTraceAsString());
     
-    if (!$is_production) {
-        echo "<div style='color: red; font-weight: bold;'>$log_message</div>";
-        echo "<pre>" . $exception->getTraceAsString() . "</pre>";
-    } else {
-        echo "<div style='color: red; font-weight: bold;'>$error_message</div>";
-    }
+    // Show generic error message
+    http_response_code(500);
+    echo "<div style='color: red; font-weight: bold;'>Sistema temporariamente indisponível. Tente novamente em alguns minutos.</div>";
+    exit();
   }
+  
+  // Set error handlers
+  set_error_handler('secure_error_handler');
+  set_exception_handler('secure_exception_handler');
    
    //ob_flush;
   
@@ -113,9 +102,8 @@ session_start();
    // Incluir funções de segurança (proteção XSS/CSRF)
    require_once(dirname(__FILE__) . "/security_functions.php");
    
-   // Incluir framework de validação de entrada
-   require_once(dirname(__FILE__) . "/InputValidationFramework.php");
-   require_once(dirname(__FILE__) . "/ValidationMiddleware.php"); 
+   // Include validation framework
+   require_once(dirname(__FILE__) . "/InputValidationFramework.php"); 
    
    $userID     =  $_SESSION['userID'];
    $nameUser   =  $_SESSION['nameUser'];

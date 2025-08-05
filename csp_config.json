@@ -1,5 +1,5 @@
 {
-    "report_only": true,
+    "report_only": false,
     "log_violations": true,
     "allow_unsafe_inline": true,
     "allow_unsafe_eval": true,
@@ -21,14 +21,14 @@
             "https://ssl.google-analytics.com",
             "https://www.google-analytics.com"
         ],
-        "img_src": [],
+        "img_src": ["data:", "https:"],
         "frame_src": [],
         "object_src": []
     },
     "notifications": {
         "email_alerts": false,
-        "admin_email": "admin@example.com",
-        "critical_threshold": 10
+        "admin_email": "security@coface.com.br",
+        "critical_threshold": 5
     },
     "page_specific_policies": {
         "tinymce_pages": {
@@ -36,14 +36,22 @@
             "allow_unsafe_inline": true,
             "allow_unsafe_eval": true,
             "additional_sources": {
-                "script_src": ["'unsafe-inline'", "'unsafe-eval'"]
+                "script_src": ["'unsafe-inline'", "'unsafe-eval'"],
+                "style_src": ["'unsafe-inline'"]
             }
         },
         "upload_pages": {
             "pattern": "upload",
             "additional_sources": {
-                "img_src": ["blob:"],
+                "img_src": ["blob:", "data:"],
                 "object_src": ["blob:"]
+            }
+        },
+        "pdf_pages": {
+            "pattern": "pdf",
+            "additional_sources": {
+                "object_src": ["'self'", "data:", "blob:"],
+                "frame_src": ["'self'", "blob:"]
             }
         }
     }

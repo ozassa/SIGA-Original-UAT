@@ -1,10 +1,12 @@
 <?php
 /**
- * Sistema de Segurança SIGA - Proteção contra XSS e CSRF
+ * SIGA Production Security Functions
  * 
- * Este arquivo contém funções essenciais de segurança para proteger
- * o sistema SIGA contra vulnerabilidades XSS e CSRF mantendo total
- * compatibilidade com o frontend existente.
+ * Essential security functions for XSS and CSRF protection
+ * optimized for production environment.
+ * 
+ * @version 2.0 - Production Ready
+ * @author Claude Code - Security Production Cleanup
  */
 
 // Inicializar sessão se não existir (verificação mais robusta)
@@ -189,9 +191,13 @@ function safe_request($key, $type = 'string', $default = '', $max_length = 255) 
 }
 
 /**
- * Define headers básicos de segurança
+ * Production optimized security headers
  */
 function set_security_headers() {
+    if (headers_sent()) {
+        return false;
+    }
+    
     // Prevent clickjacking
     header('X-Frame-Options: SAMEORIGIN');
     
@@ -204,16 +210,18 @@ function set_security_headers() {
     // Referrer policy
     header('Referrer-Policy: strict-origin-when-cross-origin');
     
-    // Content Security Policy básico (ajustar conforme necessário)
-    header("Content-Security-Policy: default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:; object-src 'none';");
+    // Basic CSP for legacy compatibility - use advanced_security_system.php for full CSP
+    header("Content-Security-Policy: default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https:; object-src 'none'; frame-ancestors 'self';");
+    
+    return true;
 }
 
 /**
- * Log de tentativas de ataques (para monitoramento)
+ * Production optimized security incident logging
  * 
- * @param string $type Tipo do ataque
- * @param string $data Dados do ataque
- * @param string $ip IP do atacante
+ * @param string $type Attack type
+ * @param string $data Attack data
+ * @param string $ip Attacker IP
  */
 function log_security_incident($type, $data, $ip = null) {
     if (!$ip) {
@@ -224,33 +232,35 @@ function log_security_incident($type, $data, $ip = null) {
         'timestamp' => date('Y-m-d H:i:s'),
         'type' => $type,
         'ip' => $ip,
-        'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown',
-        'data' => substr($data, 0, 1000), // Limitar tamanho do log
-        'url' => $_SERVER['REQUEST_URI'] ?? 'unknown'
+        'user_agent' => substr($_SERVER['HTTP_USER_AGENT'] ?? 'unknown', 0, 255),
+        'data' => substr($data, 0, 500), // Limit log size for performance
+        'url' => substr($_SERVER['REQUEST_URI'] ?? 'unknown', 0, 255)
     ];
     
-    // Log em arquivo (criar diretório se não existir)
-    $log_dir = dirname(__FILE__) . '/logs/security';
+    // Production log directory
+    $log_dir = defined('SECURITY_LOG_DIR') ? SECURITY_LOG_DIR : dirname(__FILE__) . '/logs/security';
     if (!is_dir($log_dir)) {
         mkdir($log_dir, 0755, true);
     }
     
-    $log_file = $log_dir . '/security_' . date('Y-m-d') . '.log';
-    file_put_contents($log_file, json_encode($log_entry) . PHP_EOL, FILE_APPEND | LOCK_EX);
+    $log_file = $log_dir . '/security_incidents_' . date('Y-m-d') . '.log';
+    
+    // Use error_log for better production logging
+    error_log(json_encode($log_entry), 3, $log_file);
 }
 
 /**
- * Middleware para verificação automática de CSRF em POST
- * Chamar no início de páginas que processam formulários
+ * Production CSRF middleware for form processing
  */
 function csrf_middleware() {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!verify_csrf_token()) {
-            log_security_incident('CSRF', 'Token inválido ou ausente', $_SERVER['REMOTE_ADDR'] ?? 'unknown');
+            log_security_incident('CSRF_VIOLATION', 'Invalid or missing token', $_SERVER['REMOTE_ADDR'] ?? 'unknown');
             
-            // Redirecionar com erro em vez de mostrar erro técnico
-            $current_page = $_SERVER['PHP_SELF'] ?? 'index.php';
-            header("Location: $current_page?erro=csrf");
+            // Production-safe redirect
+            http_response_code(403);
+            $current_page = $_SERVER['PHP_SELF'] ?? '/index.php';
+            header("Location: $current_page?erro=security");
             exit();
         }
     }
@@ -284,19 +294,18 @@ function is_xss_attempt($data) {
 }
 
 /**
- * Middleware para detecção de XSS
- * Verifica dados de entrada para possíveis ataques XSS
+ * Production XSS detection middleware
  */
 function xss_middleware() {
-    $inputs_to_check = array_merge($_GET, $_POST, $_COOKIE);
+    $inputs_to_check = array_merge($_GET, $_POST);
     
     foreach ($inputs_to_check as $key => $value) {
         if (is_string($value) && is_xss_attempt($value)) {
-            log_security_incident('XSS_ATTEMPT', "$key: $value", $_SERVER['REMOTE_ADDR'] ?? 'unknown');
+            log_security_incident('XSS_ATTEMPT', "$key: " . substr($value, 0, 100), $_SERVER['REMOTE_ADDR'] ?? 'unknown');
             
-            // Opcional: bloquear requisição
-            // header('HTTP/1.0 400 Bad Request');
-            // exit('Requisição bloqueada por questões de segurança.');
+            // Block suspicious requests in production
+            http_response_code(400);
+            exit('Request blocked for security reasons.');
         }
     }
 }
