@@ -18,13 +18,16 @@ if (in_array($currentFile, $publicFiles)) {
 }
 
 // Verifica se a URL requisitada contem "access.php" (ignorando caixa)
-if (strpos(strtolower($_SERVER['REQUEST_URI']), 'access.php') !== false) {
+$request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+if (strpos(strtolower($request_uri), 'access.php') !== false) {
     return;
 }
 
 // CORREÇÃO: Só enviar header se ainda não foi enviado output
 if (empty($_SESSION['userID']) || empty($_SESSION['login']) || empty($_SESSION['pefil'])) {
-    session_destroy();
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_destroy();
+    }
     
     // Verificar se headers já foram enviados
     if (!headers_sent()) {
