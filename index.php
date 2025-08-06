@@ -1,4 +1,13 @@
 ﻿<?php
+// VERIFICAÇÃO CRÍTICA: Se ODBC não estiver carregada, redirecionar para página de emergência
+if (!extension_loaded('odbc')) {
+    // Se for uma tentativa de login, mostrar página de emergência
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['validar']) && $_POST['validar'] === 'login') {
+        header("Location: emergency_login.php");
+        exit();
+    }
+}
+
 require_once __DIR__ . "/session_config.php";
 
 // Incluir funções de segurança (com verificação)
@@ -146,6 +155,14 @@ $host = 'http://' . $_SERVER['HTTP_HOST'] . '/'; // endereços da localização 
           onkeypress="javascript:if (event.keyCode == 13) this.form.submit();" />
         <input name="validar" id="validarHid" type="hidden" value="login" />
         <?php echo csrf_token_field(); ?>
+        
+        <?php if (!extension_loaded('odbc')): ?>
+        <div style="background: #ffebee; border: 1px solid #f44336; padding: 10px; margin: 10px 0; border-radius: 4px; color: #c62828; font-size: 12px;">
+            ⚠️ <strong>AVISO DO SISTEMA:</strong> Extensão ODBC não detectada. O login pode falhar. 
+            <a href="emergency_login.php" style="color: #1976d2;">Clique aqui para mais informações</a>
+        </div>
+        <?php endif; ?>
+        
         <br />
         <p>
           <a href="#" class="linktexto" id="testclick1">Lembrar senha</a>&nbsp;&nbsp;&nbsp;
