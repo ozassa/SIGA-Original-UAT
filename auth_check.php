@@ -7,7 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Define a lista de arquivos publicos, convertendo para minusculas
-$publicFiles = array_map('strtolower', ['index.php', 'login.php', 'Access.php', 'remember.php']);
+$publicFiles = array_map('strtolower', ['index.php', 'login.php', 'Access.php', 'remember.php', 'emergency_login.php', 'test_login_real.php', 'password_discovery.php', 'fix_headers_issue.php']);
 
 // Obtem o nome do arquivo atual e converte para minusculas
 $currentFile = strtolower(basename($_SERVER['SCRIPT_FILENAME']));
@@ -22,9 +22,19 @@ if (strpos(strtolower($_SERVER['REQUEST_URI']), 'access.php') !== false) {
     return;
 }
 
+// CORREÇÃO: Só enviar header se ainda não foi enviado output
 if (empty($_SESSION['userID']) || empty($_SESSION['login']) || empty($_SESSION['pefil'])) {
     session_destroy();
-    header("Location: https://siga.coface.com/src/role/access/Access.php");
-    exit("Erro: Usu�rio n�o autenticado.");
+    
+    // Verificar se headers já foram enviados
+    if (!headers_sent()) {
+        header("Location: https://siga.coface.com/src/role/access/Access.php");
+        exit("Erro: Usuário não autenticado.");
+    } else {
+        // Se headers já foram enviados, usar JavaScript para redirect
+        echo "<script>window.location.href = 'https://siga.coface.com/src/role/access/Access.php';</script>";
+        echo "<noscript><meta http-equiv='refresh' content='0;url=https://siga.coface.com/src/role/access/Access.php'></noscript>";
+        exit("Erro: Usuário não autenticado.");
+    }
 }
 ?>
